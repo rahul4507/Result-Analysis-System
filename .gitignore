@@ -1,0 +1,25 @@
+# Byte-compiled / optimized Python files
+*.pyc
+__pycache__/
+
+# Django-related files
+*.log
+db.sqlite3
+/media
+/staticfiles
+
+# Secret key configuration
+secret_key.txt
+
+# Development settings file
+local_settings.py
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# Environment-specific files
+.env
+
+# Ignore migrations, as they can be generated automatically
+**/migrations/

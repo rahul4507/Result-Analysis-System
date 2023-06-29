@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'teacher/sidebar.html' %}
+{% endif %}
+<div class="container my-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{ teacher_enroll.course_id.name }} - {{ teacher_enroll.course_id.code }}</h2>
+        </div>
+    </div>
+    <br>
+    {% if overall_course_perf.exists %}
+    <div>
+        {{overall_performance|safe}}
+    </div>
+    <br><br>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>PRN</th>
+            <th>TAG</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for prn,student_name, tag in overall_course_perf %}
+        <tr>
+            <td>{{ student_name }}</td>
+            <td>{{ prn }}</td>
+            <td>{{ tag }}</td>
+        </tr>
+        {%endfor%}
+        </tbody>
+    </table>
+    {% else %}
+    <h4 class="text-center"> No data found.</h4>
+    {% endif %}
+</div>
+{% endblock %}

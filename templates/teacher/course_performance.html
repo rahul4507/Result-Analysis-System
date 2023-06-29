@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'teacher/sidebar.html' %}
+{% endif %}
+<style>
+    table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+</style>
+<!--Display Results of each exam-->
+<div class="container my-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{ teacher_enroll.course_id.name }} - {{ teacher_enroll.course_id.code }}</h2>
+        </div>
+    </div>
+    <br>
+    <h4>Select Exam to View the Results</h4>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-3 mb-0">
+                <select class="form-control" name="examId">
+                    {% for e in exams %}
+                    <option value="{{ e.id }}">{{ e.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" name="Performance" value="studentPerformance"
+                    class="btn btn-sm btn-info">Generate Report
+            </button>
+        </div>
+    </form>
+    <hr>
+    {% if res_data%}
+    {%for name in res_data|slice:":1"%}
+    <h4>Result of {{name.exam_id.name}} Total Marks : {{name.exam_id.total_marks}}</h4>
+    {%endfor%}
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>PRN</th>
+          <th>Marks</th>
+          <th>TAG</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for sr in res_data %}
+        <tr>
+          <td>{{ sr.student_id.name }}</td>
+          <td>{{ sr.student_id.prn }}</td>
+          <td>{{ sr.obtained_marks }}</td>
+          <td>{{ sr.TAG }}</td>
+        </tr>
+      {%endfor%}
+      </tbody>
+    </table>
+        <div>
+            {{Performance_Distribution | safe}}
+        </div>
+    {% else %}
+    <h6>NO DATA FOUND</h6>
+    {%endif%}
+</div>
+{% endblock %}

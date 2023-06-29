@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'hod/sidebar.html' %}
+{% endif %}
+<div class="container my-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Batch Result Analysis</h2>
+        </div>
+    </div>
+    <br>
+    <h4>Select Batch to View the Results</h4>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-3 mb-0">
+                <select class="form-control" name="classID">
+                    {% for c in classes %}
+                    <option value="{{ c.id }}">{{ c.semester.year.year }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" name="submit" value="generate_result"
+                    class="btn btn-sm btn-info">Generate Result
+            </button>
+        </div>
+    </form>
+    <hr>
+    {% if batch_result%}
+    <h4>{{enrolled_batch.semester.year.year}} Batch Result</h4>
+    <h4>Batch Passed Students Count: {{passing_students_count}}</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>PRN</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for student, result in batch_result %}
+            <tr>
+                <td>{{ student.name }}</td>
+                <td>{{ student.prn }}</td>
+                <td>{{ result }}</td>
+            </tr>
+        {% endfor %}
+          </tbody>
+        </table>
+    {% else %}
+        <h6>NO DATA FOUND</h6>
+    {%endif%}
+</div>
+
+{%endblock%}

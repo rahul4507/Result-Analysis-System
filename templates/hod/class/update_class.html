@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'hod/sidebar.html' %}
+{% endif %}
+  {%if duplicate_entry%}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Class is already Created</strong>  Please try to create another Class.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+  {%endif%}
+<div class="class-update-form">
+  <h2>Update Class</h2>
+  <form method="POST" action="{% url 'hod:update_class' classes.id %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="division">Division:</label>
+      <input type="text" id="division" name="division" value="{{ classes.division }}" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="semester">Semester:</label>
+      <select id="semester" name="semester" class="form-control" required>
+        {% for semester in semesters %}
+          <option value="{{ semester.id }}">{{ semester }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'hod:manage_classes' %}'">Cancel</button>
+  </form>
+</div>
+<style>
+.class-update-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button.btn {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.btn:hover {
+  background-color: #0056b3;
+}
+
+button.btn-primary {
+  background-color: #007bff;
+}
+
+button.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+button.btn-secondary {
+  background-color: #007bff;
+}
+
+button.btn-secondary:hover {
+  background-color: #0056b3;
+}
+</style>
+
+
+{% endblock %}

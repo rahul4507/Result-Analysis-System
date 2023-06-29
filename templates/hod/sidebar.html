@@ -1,0 +1,76 @@
+<style>
+ .sidebar {
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow-x: auto;
+ }
+
+ .sidebar a {
+    flex: 1;
+    margin-right: 10px;
+    padding: 5px 10px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+ }
+
+ .sidebar a:hover {
+    background-color: #e6e6e6;
+ }
+
+ .sidebar a i {
+    margin-right: 5px;
+ }
+
+ .sidebar a.active {
+font-weight: bold;
+background-color: #f7f7f7; /* Blue /
+color: #fff; / White text color */
+}
+
+ .sidebar a i.fa-tachometer-alt {
+    color: #007bff; /* Blue */
+ }
+
+ .sidebar a i.fa-book {
+    color: #28a745; /* Green */
+ }
+
+ .sidebar a i.fa-pen-to-square {
+    color: #dc3545; /* Red */
+ }
+
+ .sidebar a i.fa-graduation-cap {
+    color: #ffc107; /* Yellow */
+ }
+
+ .sidebar a i.fa-person-chalkboard {
+    color: #6c757d; /* Gray */
+ }
+</style>
+<div class="sidebar">
+    <a href="{% url 'hod:hod_dashboard' %}" class="active">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+    <a href="{% url 'hod:manage_courses' %}">
+        <i class="fas fa-book"></i> Manage Courses
+    </a>
+    <a href="{% url 'hod:manage_exams' %}">
+        <i class="fas fa-pen-to-square"></i> Manage Exams
+    </a>
+    <a href="{% url 'hod:manage_classes' %}">
+        <i class="fas fa-pen-to-square"></i> Manage Classes
+    </a>
+    <a href="{% url 'hod:manage_students' %}">
+        <i class="fa-solid fa-graduation-cap"></i> Manage Students
+    </a>
+    <a href="{% url 'hod:manage_teachers' %}">
+        <i class="fa-solid fa-person-chalkboard"></i> Manage Teachers
+    </a>
+</div>

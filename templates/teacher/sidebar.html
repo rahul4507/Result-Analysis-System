@@ -1,0 +1,54 @@
+
+<style>
+ .sidebar {
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    overflow-x: auto;
+ }
+
+ .sidebar a {
+    flex: 1;
+    margin-right: 10px;
+    padding: 5px 10px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+ }
+
+ .sidebar a:hover {
+    background-color: #e6e6e6;
+ }
+
+ .sidebar a i {
+    margin-right: 5px;
+ }
+
+ .sidebar a.active {
+font-weight: bold;
+background-color: #f7f7f7; /* Blue /
+color: #fff; / White text color */
+}
+
+ .sidebar a i.fa-tachometer-alt {
+    color: #007bff; /* Blue */
+ }
+
+ .sidebar a i.fa-book {
+    color: #28a745; /* Green */
+ }
+ }
+</style>
+<div class="sidebar">
+    <a href="{% url 'teacher:teacher_dashboard' %}" class="active">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+    <a href="{% url 'teacher:teacher_courses' %}">
+        <i class="fas fa-book"></i> My Courses
+    </a>
+</div>

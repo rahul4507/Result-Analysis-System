@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'hod/sidebar.html' %}
+{% endif %}
+<div class="delete-course">
+    <h2>Delete Course</h2>
+    <p>Are you sure you want to delete the exam "{{ course.name }}"?</p>
+    <form method="POST" action="{% url 'hod:delete_course' course.id %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Delete</button>
+      <a href="{% url 'hod:manage_courses' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+<style>
+.delete-course {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 20px;
+}
+
+button.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+button.btn-danger:hover {
+  background-color: #c82333;
+}
+
+button.btn-secondary {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+button.btn-secondary:hover {
+  background-color: #5a6268;
+}
+</style>
+{% endblock %}
+

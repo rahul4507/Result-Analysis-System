@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'teacher/sidebar.html' %}
+{% endif %}
+<style>
+    .btn {
+        display: inline-block;
+        border: none;
+        padding: 8px 16px;
+        text-align: center;
+        text-decoration: none;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+    .Exam{
+    padding-top:10px;
+    }
+    .main-b {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .main-b:hover {
+      background-color: #0056b3;
+    }
+
+</style>
+
+<!--Compare performance of students in Two different exams-->
+<div class="container my-4">
+    <h4>Compare Student Performance</h4>
+    <div>
+      <div class="row">
+        <div class="col-md-6">
+
+          <form method="post" enctype="multipart/form-data"  novalidate>
+            {% csrf_token %}
+              <p>Select First Exam Results</p>
+            <div class="form-group">
+              <select class="form-control" name="examId1">
+                {% for e in exams %}
+                <option value="{{ e.id }}">{{ e.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+              <p>Select Second Exam Results</p>
+              <div class="form-group">
+              <select class="form-control" name="examId2">
+                {% for e in exams %}
+                <option value="{{ e.id }}">{{ e.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+              <button id="submitBtn" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+<!--Analysing the performance-->
+    <div>
+        {% if validate%}
+            <hr>
+            {% for sr1 in res_data1|slice:":1"%}
+                {%for sr2 in res_data2%}
+                    {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
+                        <h6>Analysis of {{ sr1.exam_id.name }} and {{ sr2.exam_id.name }}</h6>
+                    {%endif%}
+                {%endfor%}
+            {%endfor%}
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>PRN</th>
+                  <th>Transition</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for sr1 in res_data1%}
+                {%for sr2 in res_data2%}
+                    {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
+                        <tr>
+                          <td>{{ sr1.student_id.name }}</td>
+                          <td>{{ sr1.student_id.prn }}</td>
+                          <td>{{ sr1.TAG }} - {{sr2.TAG}} </td>
+                        </tr>
+                    {%endif%}
+                {%endfor%}
+            {% endfor %}
+              </tbody>
+            </table>
+            <hr>
+            <div>
+                {{Types | safe}}
+            </div>
+            <div>
+                {{Transition | safe}}
+            </div>
+
+            <div class="container my-4">
+                <button class="main-b toggle-button btn btn-primary ">Progressive Students</button>
+                <div class="toggle-content" style="display: none;">
+                        <div class="container my-4">
+                               <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>PRN</th>
+                                            <th>Transition</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if M_TO_F1 %}
+                                        {% for sr1 in M_TO_F1 %}
+                                            {% for sr2 in M_TO_F2 %}
+                                                {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
+                                                    <tr>
+                                                        <td>{{ sr1.student_id.name }}</td>
+                                                        <td>{{ sr1.student_id.prn }}</td>
+                                                        <td>{{ sr1.TAG }} - {{ sr2.TAG }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% if W_TO_F1 %}
+                                        {% for sr1 in W_TO_F1 %}
+                                            {% for sr2 in W_TO_F2 %}
+                                                {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
+                                                    <tr>
+                                                        <td>{{ sr1.student_id.name }}</td>
+                                                        <td>{{ sr1.student_id.prn }}</td>
+                                                        <td>{{ sr1.TAG }} - {{ sr2.TAG }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {%endif%}
+                                    {% if W_TO_M1 %}
+                                        {% for sr1 in W_TO_M1 %}
+                                        {% for sr2 in W_TO_M2 %}
+                                            {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
+                                                <tr>
+                                                    <td>{{ sr1.student_id.name }}</td>
+                                                    <td>{{ sr1.student_id.prn }}</td>
+                                                    <td>{{ sr1.TAG }} - {{ sr2.TAG }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {%endif%}
+                                    </tbody>
+                                </table>
+                        </div>
+                </div>
+                <br>
+                <br>
+                <button class="toggle-button btn btn-primary main-b">Stable Students</button>
+                <div class="toggle-content" style="display: none;">
+                    <div class="container my-4">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>PRN</th>
+                                        <th>Transition</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% if F_TO_F1 %}
+                                    {% for sr1 in F_TO_F1 %}
+                                        {% for sr2 in F_TO_F2 %}
+                                            {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
+                                                <tr>
+                                                    <td>{{ sr1.student_id.name }}</td>
+                                                    <td>{{ sr1.student_id.prn }}</td>
+                                                    <td>{{ sr1.TAG }} - {{ sr2.TAG }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                {%endif%}
+                                {% if M_TO_M1 %}
+                                    {% for sr1 in M_TO_M1 %}
+                                        {% for sr2 in M_TO_M2 %}
+                                            {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
+                                                <tr>
+                                                    <td>{{ sr1.student_id.name }}</td>
+                                                    <td>{{ sr1.student_id.prn }}</td>
+                                                    <td>{{ sr1.TAG }} - {{ sr2.TAG }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endif %}
+                                {% if W_TO_W1 %}
+                                    {% for sr1 in W_TO_W1 %}
+                                            {% for sr2 in W_TO_W2 %}
+                                                {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
+                                                    <tr>
+                                                        <td>{{ sr1.student_id.name }}</td>
+                                                        <td>{{ sr1.student_id.prn }}</td>
+                                                        <td>{{ sr1.TAG }} - {{ sr2.TAG }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <br>
+                <br>
+                <button class="toggle-button btn btn-primary main-b">Degrading Students</button>
+                <div class="toggle-content" style="display: none;">
+                        <div class="container my-4">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>PRN</th>
+                                            <th>Transition</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if F_TO_W1 %}
+                                        {% for sr1 in F_TO_W1 %}
+                                            {% for sr2 in F_TO_W2 %}
+                                                {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
+                                                    <tr>
+                                                        <td>{{ sr1.student_id.name }}</td>
+                                                        <td>{{ sr1.student_id.prn }}</td>
+                                                        <td>{{ sr1.TAG }} - {{ sr2.TAG }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    {% if F_TO_M1 %}
+                                        {% for sr1 in F_TO_M1 %}
+                                        {% for sr2 in F_TO_M2 %}
+                                            {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
+                                                <tr>
+                                                    <td>{{ sr1.student_id.name }}</td>
+                                                    <td>{{ sr1.student_id.prn }}</td>
+                                                    <td>{{ sr1.TAG }} - {{ sr2.TAG }}</td>
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% if M_TO_W1 %}
+                                        {% for sr1 in M_TO_W1 %}
+                                            {% for sr2 in M_TO_W2 %}
+                                                {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
+                                                    <tr>
+                                                        <td>{{ sr1.student_id.name }}</td>
+                                                        <td>{{ sr1.student_id.prn }}</td>
+                                                        <td>{{ sr1.TAG }} - {{ sr2.TAG }}</td>
+                                                    </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+            </div>
+            <script>
+                        // JavaScript code to toggle visibility of the content
+                        var toggleButtons = document.getElementsByClassName('toggle-button');
+                        for (var i = 0; i < toggleButtons.length; i++) {
+                            toggleButtons[i].addEventListener('click', function() {
+                                var content = this.nextElementSibling;
+                                content.style.display = (content.style.display === 'none') ? 'block' : 'none';
+                            });
+                        }
+            </script>
+        {%endif%}
+    </div>
+</div>
+{% endblock %}

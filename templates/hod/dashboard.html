@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'hod/sidebar.html' %}
+{% endif %}
+<div class="container my-4">
+    <h3>Upload Data</h3>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-4 mb-0">
+                <select class="form-control" name="classId">
+                    {% for c in classes %}
+                    <option value="{{ c.id }}">{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-3 mb-0">
+                <label for="studentGradeFile" class="btn btn-secondary">
+                    Upload File
+                    <input type="file" name="studentGradeFile" id="studentGradeFile" class="file-input" style="display: none;">
+                </label>
+            </div>
+            <button type="submit" name="studentGradeFile" value="studentGradeFile"
+                    class="btn btn-m btn-info">Submit
+            </button>
+        </div>
+        <br>
+    </form>
+</div>
+<div class="container my-4">
+    <a href="{% url 'hod:view_results' %}" class="btn btn-success">
+        <i class="fas fa-graduation-cap mr-2"></i>View Results
+    </a>
+</div>
+<div class="container my-4">
+    <a href="{% url 'hod:batch_result' %}" class="btn btn-success">
+        <i class="fas fa-graduation-cap mr-2"></i>View BatchWise Result
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'teacher/sidebar.html' %}
+{% endif %}
+<div class="container my-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{ teacher_enroll.course_id.name }} - {{ teacher_enroll.course_id.code }}</h2>
+        </div>
+    </div>
+    <br>
+    <h4>Upload Results</h4>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-3 mb-0">
+                <select class="form-control" name="examId">
+                    {% for e in exams %}
+                    <option value="{{ e.id }}">{{ e.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-3 mb-0">
+                <input type="file" name="studentResultFile">
+            </div>
+            <button type="submit" name="result" value="studentResult"
+                    class="btn btn-sm btn-info">Submit
+            </button>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'hod/sidebar.html' %}
+{% endif %}
+<style>
+  .create-class {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .create-class h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .create-class form {
+    margin-top: 20px;
+  }
+
+  .create-class label {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .create-class input[type="text"],
+  .create-class input[type="number"],
+  .create-class select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .create-class button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .create-class button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+</style>
+  {%if duplicate_entry%}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Class is already Created</strong>  Please try to create another Class.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+  {%endif%}
+<div class="create-class">
+  <h2>Create Class</h2>
+  <form method="POST" action="{% url 'hod:create_class' %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="division">Division:</label>
+      <input type="text" id="division" name="division" required>
+    </div>
+
+    <div class="form-group">
+      <label for="semester">Semester:</label>
+      <select id="semester" name="semester" required>
+        {% for semester in semesters %}
+          <option value="{{ semester.id}}">{{ semester }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit">Create</button>
+  </form>
+</div>
+{% endblock %}

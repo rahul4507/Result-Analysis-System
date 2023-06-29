@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center align-items-center h-100">
+    <div class="col-md-6">
+        <div class="card p-2">
+            <div class="card-body">
+                <h3 class="text-center">Student Sign Up</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                            {% if form.name.errors %}
+                            <div class="alert alert-danger mt-2" role="alert">
+                                {{ form.name.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group pl-2">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                            {% if form.email.errors %}
+                            <div class="alert alert-danger mt-2" role="alert">
+                                {{ form.email.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="password1">Password</label>
+                            <input type="password" class="form-control" id="password1" name="password1" required>
+                            {% if form.password1.errors %}
+                            <div class="alert alert-danger mt-2" role="alert">
+                                {{ form.password1.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group pl-2">
+                            <label for="password2">Confirm Password</label>
+                            <input type="password" class="form-control" id="password2" name="password2"
+                                   required>
+                            {% if form.password2.errors %}
+                            <div class="alert alert-danger mt-2" role="alert">
+                                {{ form.password2.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="prn">PRN</label>
+                            <input type="number" class="form-control" id="prn" name="prn"
+                                   required>
+                            {% if form.prn.errors %}
+                            <div class="alert alert-danger mt-2" role="alert">
+                                {{ form.prn.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group pl-2">
+                            <label for="contact_no">Contact</label>
+                            <input type="number" class="form-control" id="contact_no" name="contact_no">
+                            {% if form.contact_no.errors %}
+                            <div class="alert alert-danger mt-2" role="alert">
+                                {{ form.contact_no.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Sign Up</button>
+                </form>
+                <div class="mt-3">
+                    <p>Already have account. <a href="{% url 'student:student_login' %}">Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+[
+  {
+    "model": "user.semester",
+    "pk": 1,
+    "fields": {
+      "semester": 1,
+      "year": "2023-01-01",
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.semester",
+    "pk": 2,
+    "fields": {
+      "semester": 2,
+      "year": "2023-01-01",
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.semester",
+    "pk": 3,
+    "fields": {
+      "semester": 3,
+      "year": "2023-01-01",
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.semester",
+    "pk": 4,
+    "fields": {
+      "semester": 4,
+      "year": "2023-01-01",
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.semester",
+    "pk": 5,
+    "fields": {
+      "semester": 5,
+      "year": "2023-01-01",
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.semester",
+    "pk": 6,
+    "fields": {
+      "semester": 6,
+      "year": "2023-01-01",
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.semester",
+    "pk": 7,
+    "fields": {
+      "semester": 7,
+      "year": "2023-01-01",
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.semester",
+    "pk": 8,
+    "fields": {
+      "semester": 8,
+      "year": "2023-01-01",
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  }
+]

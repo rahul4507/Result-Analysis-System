@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'student/sidebar.html' %}
+{% endif %}
+<div class="container my-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{ student.course_id.name }} - {{ student.course_id.code }}</h2>
+        </div>
+    </div>
+    <br>
+    <div>
+        {% if student %}
+        <h4>Performance: {{ student.performance }}</h4>
+        {%else%}
+        <h4>No data Found</h4>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

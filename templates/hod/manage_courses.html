@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+  {% if request.user.is_authenticated %}
+    {% include 'hod/sidebar.html' %}
+  {% endif %}
+  <style>
+    .manage-courses {
+      font-family: Arial, sans-serif;
+    }
+
+    .manage-courses h2 {
+    margin-bottom:0;
+      color: #333;
+    }
+
+    .manage-courses table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .manage-courses th,
+    .manage-courses td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    .manage-courses th {
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    .manage-courses tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .manage-courses .add-new-course {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .manage-courses .add-new-course:hover {
+      background-color: #45a049;
+    }
+
+    .manage-courses .search-wrapper {
+      margin-top: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .manage-courses .search-bar {
+      padding: 8px;
+      width: 250px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .manage-courses .search-button {
+      margin-left: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+  </style>
+
+  <div class="manage-courses">
+    <h2>Manage Courses</h2>
+    <a href="{% url 'hod:create_course' %}" class="add-new-course">Add New Course</a>
+    {%if courses%}
+    <div class="search-wrapper">
+      <input type="text" id="search" class="search-bar" placeholder="Search by name or code">
+      <button id="searchButton" class="search-button">Search</button>
+    </div>
+    <table>
+      <thead>
+        {% if courses %}
+          <tr>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Credits</th>
+            <th>Batch</th>
+            <th>Semester</th>
+            <th>Optional</th>
+            <th>Update</th>
+            <th>Delete</th>
+          </tr>
+        {% endif %}
+      </thead>
+      <tbody>
+          {% for course in courses %}
+            <tr>
+              <td>{{ course.name }}</td>
+              <td>{{ course.code }}</td>
+              <td>{{ course.credits }}</td>
+              <td>{{ course.semester.year.year }}</td>
+              <td>{{ course.semester.semester }}</td>
+              <td>{{ course.is_optional }}</td>
+              <td>
+                <a href="{% url 'hod:update_course' course.id %}">Update</a>
+              </td>
+              <td>
+                <a href="{% url 'hod:delete_course' course.id %}">Delete</a>
+              </td>
+            </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+    {%else%}
+    <h4>No Courses Found.</h4>
+    {%endif%}
+  </div>
+
+  <script>
+    const searchInput = document.getElementById('search');
+    const searchButton = document.getElementById('searchButton');
+
+    searchButton.addEventListener('click', function () {
+      const searchValue = searchInput.value.toLowerCase();
+      const tableRows = document.querySelectorAll('.manage-courses tbody tr');
+
+      tableRows.forEach(function (row) {
+        const name = row.querySelector('td:first-child').innerText.toLowerCase();
+        const code = row.querySelector('td:nth-child(2)').innerText.toLowerCase();
+        if (name.includes(searchValue) || code.includes(searchValue)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+  </script>
+
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+  {% include 'hod/sidebar.html' %}
+{% endif %}
+  <style>
+    .manage-classes {
+      font-family: Arial, sans-serif;
+    }
+
+    .manage-classes h2 {
+        margin-bottom:0;
+      color: #333;
+    }
+
+    .manage-classes table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .manage-classes th,
+    .manage-classes td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    .manage-classes th {
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    .manage-classes tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .manage-classes .add-new-class {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .manage-classes .add-new-class:hover {
+      background-color: #45a049;
+    }
+
+    .manage-classes .search-wrapper {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .manage-classes .search-bar {
+      padding: 8px;
+      width: 250px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .manage-classes .search-button {
+      margin-left: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+  </style>
+  <div class="manage-classes">
+    <h2>Manage Classes</h2>
+    <a href="{% url 'hod:create_class' %}" class="add-new-class">Add New Class</a>
+    {%if classes%}
+    <div class="search-wrapper">
+      <input type="text" id="search" class="search-bar" placeholder="Search by division or semester">
+      <button id="searchButton" class="search-button">Search</button>
+    </div>
+    <br>
+    <table>
+      <thead>
+        <tr>
+          <th>Division</th>
+          <th>Semester</th>
+          <th>Year</th>
+          <th>Update</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for class in classes %}
+          <tr>
+            <td>{{ class.division }}</td>
+            <td>{{ class.semester.semester }}</td>
+            <td>{{ class.semester.year.year }}</td>
+            <td><a href="{% url 'hod:update_class' class.id %}">Update</a></td>
+            <td><a href="{% url 'hod:delete_class' class.id %}">Delete</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {%else%}
+    <h4>No Classes Found.</h4>
+    {%endif%}
+  </div>
+  <script>
+    const searchInput = document.getElementById('search');
+    const searchButton = document.getElementById('searchButton');
+
+    searchButton.addEventListener('click', function () {
+      const searchValue = searchInput.value.toLowerCase();
+      const tableRows = document.querySelectorAll('.manage-classes tbody tr');
+
+      tableRows.forEach(function (row) {
+        const division = row.querySelector('td:first-child').innerText.toLowerCase();
+        const semester = row.querySelector('td:nth-child(2)').innerText.toLowerCase();
+        if (division.includes(searchValue) || semester.includes(searchValue)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+  </script>
+{% endblock %}

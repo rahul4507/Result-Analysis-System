@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'hod/sidebar.html' %}
+{% endif %}
+<style>
+    .manage-teachers {
+      font-family: Arial, sans-serif;
+    }
+
+    .manage-teachers h2 {
+    margin-bottom:0;
+      color: #333;
+    }
+
+    .manage-teachers table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .manage-teachers th,
+    .manage-teachers td {
+      padding: 12px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    .manage-teachers th {
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    .manage-teachers tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .manage-teachers .add-new-teacher {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .manage-teachers .add-new-teacher:hover {
+      background-color: #45a049;
+    }
+
+    .manage-teachers .search-wrapper {
+      margin-top: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .manage-teachers .search-bar {
+      padding: 8px;
+      width: 250px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .manage-teachers .search-button {
+      margin-left: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+  </style>
+
+<div class="manage-teachers">
+    <h2>Manage Teachers</h2>
+    <a href="{% url 'hod:create_teacher' %}" class="add-new-teacher">Add New Teacher</a>
+    {% if teachers %}
+    <div class="search-wrapper">
+      <input type="text" id="search" class="search-bar" placeholder="Search by name or contact_no">
+      <button id="searchButton" class="search-button">Search</button>
+    </div>
+    <table>
+      <thead>
+          <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Contact No</th>
+            <th>Update</th>
+            <th>Delete</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for teacher in teachers %}
+            <tr>
+              <td>{{ teacher.name }}</td>
+              <td>{{ teacher.address }}</td>
+              <td>{{ teacher.contact_no }}</td>
+              <td>
+                <a href="{% url 'hod:update_teacher' teacher.id %}">Update</a>
+              </td>
+              <td>
+                <a href="{% url 'hod:delete_teacher' teacher.id %}">Delete</a>
+              </td>
+            </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+    {%else%}
+    <h4>No Teachers Found.</h4>
+    {%endif%}
+</div>
+<script>
+    const searchInput = document.getElementById('search');
+    const searchButton = document.getElementById('searchButton');
+
+    searchButton.addEventListener('click', function () {
+      const searchValue = searchInput.value.toLowerCase();
+      const tableRows = document.querySelectorAll('.manage-teachers tbody tr');
+
+      tableRows.forEach(function (row) {
+        const name = row.querySelector('td:first-child').innerText.toLowerCase();
+        const contact_no = row.querySelector('td:nth-child(3)').innerText.toLowerCase();
+        if (name.includes(searchValue) || contact_no.includes(searchValue)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+  </script>
+{% endblock %}

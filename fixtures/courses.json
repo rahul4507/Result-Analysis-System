@@ -1,0 +1,383 @@
+[
+  {
+    "model": "user.course",
+    "pk": 1,
+    "fields": {
+      "name": "Mathematics-I",
+      "code": "MA101",
+      "credits": 4,
+      "semester": 1,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 2,
+    "fields": {
+      "name": "Engineering Physics-I",
+      "code": "PH101",
+      "credits": 4,
+      "semester": 1,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 3,
+    "fields": {
+      "name": "Engineering Chemistry-I",
+      "code": "CY101",
+      "credits": 4,
+      "semester": 1,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 4,
+    "fields": {
+      "name": "Introduction to Computing",
+      "code": "CS101",
+      "credits": 4,
+      "semester": 1,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 5,
+    "fields": {
+      "name": "Communication Skills",
+      "code": "HU101",
+      "credits": 3,
+      "semester": 1,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 6,
+    "fields": {
+      "name": "Engineering Graphics-I",
+      "code": "ME101",
+      "credits": 3,
+      "semester": 1,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 7,
+    "fields": {
+      "name": "Mathematics-II",
+      "code": "MA102",
+      "credits": 4,
+      "semester": 2,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 8,
+    "fields": {
+      "name": "Engineering Physics-II",
+      "code": "PH102",
+      "credits": 4,
+      "semester": 2,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 9,
+    "fields": {
+      "name": "Engineering Chemistry-II",
+      "code": "CY102",
+      "credits": 4,
+      "semester": 2,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 10,
+    "fields": {
+      "name": "Programming and Data Structures",
+      "code": "CS102",
+      "credits": 4,
+      "semester": 2,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 11,
+    "fields": {
+      "name": "Humanities and Social Sciences",
+      "code": "HU102",
+      "credits": 3,
+      "semester": 2,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 12,
+    "fields": {
+      "name": "Engineering Graphics-II",
+      "code": "ME102",
+      "credits": 3,
+      "semester": 2,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 13,
+    "fields": {
+      "name": "Mathematics-III",
+      "code": "MA201",
+      "credits": 4,
+      "semester": 3,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 14,
+    "fields": {
+      "name": "Electronic Devices and Circuits",
+      "code": "EC201",
+      "credits": 4,
+      "semester": 3,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 15,
+    "fields": {
+      "name": "Object-Oriented Programming and Design",
+      "code": "CS201",
+      "credits": 4,
+      "semester": 3,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 16,
+    "fields": {
+      "name": "Data Structures and Algorithms",
+      "code": "CS202",
+      "credits": 4,
+      "semester": 3,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 17,
+    "fields": {
+      "name": "Discrete Structures",
+      "code": "CS203",
+      "credits": 4,
+      "semester": 3,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 18,
+    "fields": {
+      "name": "Probability and Statistics",
+      "code": "MA202",
+      "credits": 3,
+      "semester": 3,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 19,
+    "fields": {
+      "name": "Humanities and Social Sciences-II",
+      "code": "HU202",
+      "credits": 3,
+      "semester": 3,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 20,
+    "fields": {
+      "name": "Engineering Mathematics-IV",
+      "code": "MA301",
+      "credits": 4,
+      "semester": 4,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 20,
+    "fields": {
+      "name": "Computer Organization and Architecture",
+      "code": "CS301",
+      "credits": 4,
+      "semester": 4,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 22,
+    "fields": {
+      "name": "Database Management Systems",
+      "code": "CS302",
+      "credits": 4,
+      "semester": 4,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 23,
+    "fields": {
+      "name": "Operating Systems",
+      "code": "CS303",
+      "credits": 4,
+      "semester": 4,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 24,
+    "fields": {
+      "name": "Computer Graphics",
+      "code": "CS304",
+      "credits": 4,
+      "semester": 4,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 25,
+    "fields": {
+      "name": "Web Technologies",
+      "code": "CS305",
+      "credits": 4,
+      "semester": 4,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 26,
+    "fields": {
+      "name": "Humanities and Social Sciences-III",
+      "code": "HU301",
+      "credits": 3,
+      "semester": 4,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "user.course",
+    "pk": 27,
+    "fields": {
+      "name": "Software Engineering",
+      "code": "CS401",
+      "credits": 4,
+      "semester": 5,
+      "is_active": true,
+      "is_optional": false,
+      "created_at": "2023-05-11T00:00:00Z",
+      "updated_at": "2023-05-11T00:00:00Z"
+    }
+  }
+]
+
+
+

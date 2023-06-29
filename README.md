@@ -1,2 +1,6 @@
-# Result-Analysis-System
-A tool for analyzing students result and graphically representing meaning full insights
+# Student Analysis System
+
+### Dump data
+python manage.py loaddata fixtures\semesters.json
+
+python manage.py loaddata fixtures\class.json

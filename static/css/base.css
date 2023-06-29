@@ -1,0 +1,28 @@
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+* {
+    font-family: 'PT Sans', sans-serif;
+}
+
+.navbar {
+    padding: 0;
+}
+
+.navbar-brand {
+    padding: 0;
+}
+
+body {
+    background-color: rgb(240, 242, 245);
+}
+
+.main-content{
+    min-height: 83vh;
+    margin-top:0vh;
+}
+.footer{
+    min-height:10vh;
+    padding:13px
+}

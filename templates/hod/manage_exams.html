@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+  {% if request.user.is_authenticated %}
+    {% include 'hod/sidebar.html' %}
+  {% endif %}
+
+  <style>
+    .manage-exams {
+      font-family: Arial, sans-serif;
+    }
+
+    .manage-exams h2 {
+     margin-bottom:0;
+      color: #333;
+    }
+
+    .manage-exams table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .manage-exams th,
+    .manage-exams td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+
+    .manage-exams th {
+      background-color: #f2f2f2;
+    }
+
+    .manage-exams tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .manage-exams a {
+      margin-right: 5px;
+    }
+
+    .manage-exams .add-new-exam {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .manage-exams .add-new-exam:hover {
+      background-color: #45a049;
+    }
+
+    .manage-exams .search-bar {
+      margin-top: 10px;
+    }
+
+    .manage-exams .search-bar input[type="text"] {
+      padding: 8px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    .manage-exams .search-bar button {
+      padding: 8px 12px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .manage-exams .search-bar button:hover {
+      background-color: #45a049;
+    }
+  </style>
+  <div class="manage-exams">
+    <h2>Manage Exams</h2>
+    <button onclick="location.href='{% url 'hod:create_exam' %}'" class="add-new-exam">Add New Exam</button>
+    {%if exams%}
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Search by Name or Total Marks">
+      <button id="search-button">Search</button>
+    </div>
+    <br>
+    <table id="exam-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Total Marks</th>
+          <th>Update</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for exam in exams %}
+          <tr>
+            <td>{{ exam.name }}</td>
+            <td>{{ exam.total_marks }}</td>
+            <td><a href="{% url 'hod:update_exam' exam.id %}">Update</a></td>
+            <td><a href="{% url 'hod:delete_exam' exam.id %}">Delete</a></td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">No exams found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {%else%}
+    <h4>No exams found.</h4>
+    {%endif%}
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('search-input');
+      const searchButton = document.getElementById('search-button');
+      const examTable = document.getElementById('exam-table');
+
+      searchButton.addEventListener('click', function() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const rows = examTable.getElementsByTagName('tr');
+
+        for (let i = 1; i < rows.length; i++) {
+          const name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+          const totalMarks = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+
+          if (name.includes(searchTerm) || totalMarks.includes(searchTerm)) {
+            rows[i].style.display = '';
+          } else {
+            rows[i].style.display = 'none';
+          }
+        }
+      });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'hod/sidebar.html' %}
+{% endif %}
+<div class="course-update-form">
+  <h2>Update Course</h2>
+  <form method="POST" action="{% url 'hod:update_course' course.id %}">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" value="{{ course.name }}" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="code">Code:</label>
+      <input type="text" id="code" name="code" value="{{ course.code }}" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="credits">Credits:</label>
+      <input type="number" id="credits" name="credits" value="{{ course.credits }}" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="semester">Semester:</label>
+      <select id="semester" name="semester" class="form-control" required>
+        {% for semester in classes %}
+          <option value="{{ semester.id }}" {% if semester.id == course.semester.id %}selected{% endif %}>{{ semester }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="is_optional">Optional:</label>
+      <input type="checkbox" id="is_optional" name="is_optional" {% if course.is_optional %}checked{% endif %}>
+    </div>
+    <div class="submit-container">
+      <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+  </form>
+</div>
+<style>
+.course-update-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input.form-control,
+select.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button.btn {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button.btn:hover {
+  background-color: #0056b3;
+}
+
+button.btn-primary {
+  background-color: #007bff;
+}
+
+button.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+button.btn-secondary {
+  background-color: #007bff;
+}
+
+button.btn-secondary:hover {
+  background-color: #0056b3;
+}
+</style>
+
+<script>
+    // Retrieve the checkbox elements
+    var is_active_checkbox = document.getElementById('is_active');
+    var is_optional_checkbox = document.getElementById('is_optional');
+
+    // Set the checked attribute based on the values
+    is_active_checkbox.checked = {% if course.is_active %}true{% else %}false{% endif %};
+    is_optional_checkbox.checked = {% if course.is_optional %}true{% else %}false{% endif %};
+  </script>
+{% endblock %}

@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'hod/sidebar.html' %}
+{% endif %}
+<style>
+  .manage-students {
+    font-family: Arial, sans-serif;
+
+  }
+
+  .manage-students h2 {
+    margin-bottom: 0px;
+    color:#333;
+  }
+
+  .manage-students table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .manage-students th,
+  .manage-students td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+
+  .manage-students th {
+    background-color: #f2f2f2;
+     color: #333;
+  }
+
+  .manage-students tr:hover {
+    background-color: #f9f9f9;
+  }
+
+  .manage-students .add-new-student {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .manage-students .add-new-student:hover {
+    background-color: #45a049;
+  }
+ .manage-students .search-wrapper {
+      margin-top: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+  .manage-students .search-bar {
+    margin-top: 20px;
+  }
+
+  .manage-students .search-bar input[type="text"] {
+    padding: 8px;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+
+  .manage-students .search-bar button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .manage-students .search-bar button:hover {
+    background-color: #45a049;
+  }
+</style>
+<div class="manage-students">
+  <h2>Manage Students</h2>
+  <a href="{% url 'hod:create_student' %}" class="add-new-student">Add New Student</a>
+  {%if students%}
+  <div class="search-bar">
+    <input type="text" id="search-input" placeholder="Search by Name or PRN">
+    <button id="search-button">Search</button>
+  </div>
+  <br>
+  <table id="student-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>PRN</th>
+        <th>DOB</th>
+        <th>Address</th>
+        <th>Contact No</th>
+        <th>Update</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+        <tr>
+          <td>{{ student.name }}</td>
+          <td>{{ student.prn }}</td>
+          <td>{{ student.dob.date }}</td>
+          <td>{{ student.address }}</td>
+          <td>{{ student.contact_no }}</td>
+          <td>
+            <a href="{% url 'hod:update_student' student.id %}">Update</a>
+          </td>
+          <td>
+            <a href="{% url 'hod:delete_student' student.id %}">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {%else%}
+  <h4>No Data found.</h4>
+  {%endif%}
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    const studentTable = document.getElementById('student-table');
+
+    searchButton.addEventListener('click', function() {
+      const searchTerm = searchInput.value.toLowerCase();
+      const rows = studentTable.getElementsByTagName('tr');
+
+      for (let i = 1; i < rows.length; i++) {
+        const name = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+        const prn = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+
+        if (name.includes(searchTerm) || prn.includes(searchTerm)) {
+          rows[i].style.display = '';
+        } else {
+          rows[i].style.display = 'none';
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

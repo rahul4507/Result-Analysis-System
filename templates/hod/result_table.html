@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}HOD Dashboard{% endblock %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% include 'hod/sidebar.html' %}
+{% endif %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>PRN</th>
+            <th>Result</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student, result in student_results %}
+        <tr>
+            <td>{{ student.name }}</td>
+            <td>{{ student.prn }}</td>
+            <td>{{ result }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{%endblock%}
