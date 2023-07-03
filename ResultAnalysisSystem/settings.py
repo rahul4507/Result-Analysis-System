@@ -82,14 +82,15 @@ WSGI_APPLICATION = 'ResultAnalysisSystem.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'student_analysis',
+       'NAME': 'student-analysis',
        'USER': 'postgres',
-       'PASSWORD': 'rahul',
+       'PASSWORD': 'khush',
        'HOST': 'localhost',
-       'PORT': '5432',
+       'PORT': '2620',
    }
 }
 # task add oracle
@@ -136,3 +137,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user.CustomUser'
+
+## this is comment
