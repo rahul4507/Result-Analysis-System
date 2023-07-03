@@ -20,6 +20,6 @@ local_settings.py
 
 # Environment-specific files
 .env
-
+/venv
 # Ignore migrations, as they can be generated automatically
 **/migrations/

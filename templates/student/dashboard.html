@@ -6,6 +6,7 @@
 {% if request.user.is_authenticated %}
 {% include 'student/sidebar.html' %}
 {% endif %}
+<!--This is student DashBoard -->
 <div class="container my-4">
     <div class="form-row">
         {% if student_enroll %}
@@ -28,5 +29,4 @@
 
     </div>
 </div>
-
 {% endblock %}
