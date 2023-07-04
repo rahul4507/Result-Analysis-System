@@ -7,7 +7,6 @@ from user.models import Course, CustomUser
 
 
 def update_student_data(class_ins, student_grade_file):
-
     semester = class_ins.semester
     df = pd.read_csv(student_grade_file)
     df = df.fillna(0)
@@ -28,7 +27,7 @@ def update_student_data(class_ins, student_grade_file):
                 updated_at=timezone.now()
             )
             new_course.save()
-    #Student Creation from the file
+    # Student Creation from the file
     for idx, row in df.iterrows():
         email = row['EMAIL_ID']
         password = 'Student@123'
@@ -75,7 +74,7 @@ def update_student_data(class_ins, student_grade_file):
         for course in course_list:
             # Get the grade for the current course in the row
             grade = row[course]
-            course_obj=Course.objects.get(name=course)
+            course_obj = Course.objects.get(name=course)
             # Create the student enrollment
             enrollment, created = StudentEnrollment.objects.get_or_create(
                 student_id=student,
@@ -93,3 +92,42 @@ def update_student_data(class_ins, student_grade_file):
                 enrollment.grade = grade
                 enrollment.updated_at = timezone.now()
                 enrollment.save()
+
+
+def register_students(student_data_file):
+    df = pd.read_csv(student_data_file)
+    df = df.fillna(0)
+    for idx, row in df.iterrows():
+        email = row['EMAIL_ID']
+        password = 'Student@123'
+        try:
+            # Check if a user with the same email already exists
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            # Create a new user if no user with the same email exists
+            user = CustomUser.objects.create(
+                role='S',
+                email=email,
+                password=make_password(password)
+            )
+        prn = row['PRN']
+        name = row['NAME']
+        # Try to get the student with the same prn if it already exists
+        try:
+            student = Student.objects.get(prn=prn)
+        except Student.DoesNotExist:
+            # Create a new student if no student with the same prn exists
+            student = Student(
+                prn=prn,
+                name=name,
+                user=user,
+                created_at=timezone.now(),
+                updated_at=timezone.now()
+            )
+            student.save()
+        else:
+            # Update the existing student's information
+            student.name = name
+            student.user = user
+            student.updated_at = timezone.now()
+            student.save()

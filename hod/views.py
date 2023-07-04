@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import View
 
 from hod.models import HOD
-from hod.process_data import update_student_data
+from hod.process_data import update_student_data, register_students
 from student.models import StudentEnrollment, Student
 from teacher.models import Teacher
 from user.models import Class, Course, Semester, Exam, CustomUser
@@ -265,11 +265,15 @@ def manage_students(request):
     context = {
         'students': students
     }
+    if request.method == 'POST':
+        student_data = request.FILES.get('student-data')
+        register_students(student_data)
     return render(request, 'hod/manage_students.html', context=context)
 
 
 @hod_required
 def create_student(request):
+    global validate
     students = Student.objects.all()
     context = {
         'validate': 1,
@@ -282,48 +286,48 @@ def create_student(request):
         contact_no = request.POST.get('contact_no')
         address = request.POST.get('address')
         email = request.POST.get('email')
-        password = "Student@123"
+        password = 'Student@123'
+        try:
+            # Check if a user with the same email already exists
+            user = CustomUser.objects.get(email=email)
+            if (user):
+                validate = 0
+        except CustomUser.DoesNotExist:
+            # Create a new user if no user with the same email exists
+            user = CustomUser.objects.create(
+                role='S',
+                email=email,
+                password=make_password(password)
+            )
+        try:
+            student = Student.objects.get(prn=prn)
+            if (student):
+                validate = 0
+        except Student.DoesNotExist:
+            # Create a new student if no student with the same prn exists
+            student = Student(
+                prn=prn,
+                name=name,
+                address=address,
+                dob=dob,
+                contact_no=contact_no,
+                user=user,
+                created_at=timezone.now(),
+                updated_at=timezone.now()
+            )
+            student.save()
+        if validate:
+            context = {
+                'students': students
+            }
+            return render(request, 'hod/manage_students.html', context=context)
+        else:
+            context = {
+                'validate': validate,
+                'students': students
+            }
+            return render(request, 'hod/student/create_student.html', context=context)
 
-        # try:
-        #     student = get_object_or_404(Student, prn=prn)
-        #     return render(request, 'hod/student/create_student.html',
-        #                   context={
-        #                       'validate': 0,
-        #                       'error': "Student with the same PRN already Exists"
-        #                   }
-        #                   )
-        # except Http404:
-        #     try:
-        #         # Check if a user with the same email already exists
-        #         user = get_object_or_404(CustomUser, email=email)
-        #         return render(request, 'hod/student/create_student.html',
-        #                       context={
-        #                           'validate': 0,
-        #                           'error': "User with the same Email  already Exists"
-        #                       }
-        #                       )
-        #     except Http404:
-        # Create a new user if no user with the same email exists
-        user = CustomUser.objects.create(
-            role='S',
-            email=email,
-            password=make_password(password)
-        )
-        user.save()
-        # Create a new student if no student with the same prn exists
-        student = Student.objects.create(
-            name=name,
-            prn=prn,
-            dob=dob,
-            address=address,
-            contact_no=contact_no,
-            created_at=timezone.now(),
-            updated_at=timezone.now()
-        )
-        student.save()
-        # Handle any additional logic or redirect as needed
-        student.save()
-        return redirect('hod:manage_students')
     else:
         # Render the form to create a new Student
         return render(request, 'hod/student/create_student.html', context=context)
