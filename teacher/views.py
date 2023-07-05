@@ -264,34 +264,47 @@ def performance_analysis(request, pk):
     return render(request, 'teacher/performance_analysis.html', context)
 
 
+
 @teacher_required
 def overall_performance(request, pk):
-    teacher_enroll = get_object_or_404(TeacherEnrollment, pk=pk)
-    students = StudentEnrollment.objects.filter(course_id=teacher_enroll.course_id, class_id=teacher_enroll.class_id)
-    for student in students:
-        student_tag = StudentResult.objects.filter(student_id=student.student_id).values('TAG').annotate(
-            tag_count=Count('TAG')).order_by('-tag_count').annotate(
-            tag_order=Case(*[When(TAG=tag, then=pos) for pos, tag in enumerate(['FAST', 'MODERATE', 'WEAK'])],
-                           default=len(['FAST', 'MODERATE', 'WEAK']))).first()
-        student.performance = student_tag.get('TAG')
-        student.save()
-    qs = students.values('performance').annotate(performance_count=Count('performance')).filter(
-        performance__in=['FAST', 'MODERATE', 'WEAK'])
-    overall_course_perf = qs.values_list('student_id__prn', 'student_id__name', 'performance')
-    overall_course_count = qs.values_list('performance_count', flat=True)
-    labels = ['FAST', 'MODERATE', 'WEAK']
-    colors = ['green', 'blue', 'red']
-    category_order = ['FAST', 'MODERATE', 'WEAK']
-    fig = go.Figure(data=[go.Bar(x=labels, y=list(overall_course_count), marker=dict(color=colors))])
-    fig.update_layout(
-        title='Overall Performance of Students',
-        xaxis_title='Performance',
-        yaxis_title='Students',
-        xaxis=dict(type='category', categoryorder='array', categoryarray=category_order)
-    )
-    context = {
-        'teacher_enroll': teacher_enroll,
-        'overall_performance': fig.to_html(),
-        'overall_course_perf': overall_course_perf
-    }
-    return render(request, 'teacher/overall_performance.html', context)
+    teacher_enroll = TeacherEnrollment.objects.get(pk=pk)
+    exam = Exam.objects.get(name='Total')
+    res_data = StudentResult.objects.filter(exam_id=exam, course_id=teacher_enroll.course_id, class_id=teacher_enroll.class_id)
+
+    if res_data:
+        # Count the occurrences of each tag value
+        tag_counts = {
+            'WEAK': 0,
+            'FAST': 0,
+            'MODERATE': 0
+        }
+
+        for result in res_data:
+            if result.TAG == 'WEAK':
+                tag_counts['WEAK'] += 1
+            elif result.TAG == 'FAST':
+                tag_counts['FAST'] += 1
+            elif result.TAG == 'MODERATE':
+                tag_counts['MODERATE'] += 1
+
+        # BAR chart
+        labels = list(tag_counts.keys())
+        values = list(tag_counts.values())
+        colors = ['red', 'green', 'blue']
+
+        category_order = ['FAST', 'MODERATE', 'WEAK']
+
+        fig = go.Figure(data=[go.Bar(x=labels, y=values, marker=dict(color=colors))])
+        fig.update_layout(
+            title='Tag Distribution',
+            xaxis_title='Performance',
+            yaxis_title='Students',
+            xaxis=dict(type='category', categoryorder='array', categoryarray=category_order)
+        )
+
+        return render(request, 'teacher/overall_performance.html',
+                      context={'teacher_enroll': teacher_enroll, 'exams': exam, 'res_data': res_data,
+                               'Performance_Distribution': fig.to_html()})
+    else:
+        return render(request, 'teacher/overall_performance.html',
+                      context={'teacher_enroll': teacher_enroll, 'exams': exam, 'res_data': []})
