@@ -85,8 +85,27 @@
     background-color: #45a049;
   }
 </style>
+
 <div class="manage-students">
   <h2>Manage Students</h2>
+  <br>
+  <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-3 mb-0">
+                <h4>Dump Data</h4>
+            </div>
+            <div class="form-group col-md-3 mb-0">
+                <label for="student-data" class="btn btn-secondary">
+                    Upload File
+                    <input type="file" name="student-data" id="student-data" class="file-input" style="display: none;">
+                </label>
+            </div>
+            <button type="submit" name="student-data" value="student-data"
+                    class="btn btn-m btn-info">Submit
+            </button>
+        </div>
+  </form>
   <a href="{% url 'hod:create_student' %}" class="add-new-student">Add New Student</a>
   {%if students%}
   <div class="search-bar">
