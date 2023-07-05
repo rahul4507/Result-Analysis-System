@@ -264,12 +264,12 @@ def performance_analysis(request, pk):
     return render(request, 'teacher/performance_analysis.html', context)
 
 
-
 @teacher_required
 def overall_performance(request, pk):
     teacher_enroll = TeacherEnrollment.objects.get(pk=pk)
     exam = Exam.objects.get(name='Total')
-    res_data = StudentResult.objects.filter(exam_id=exam, course_id=teacher_enroll.course_id, class_id=teacher_enroll.class_id)
+    res_data = StudentResult.objects.filter(exam_id=exam, course_id=teacher_enroll.course_id,
+                                            class_id=teacher_enroll.class_id)
 
     if res_data:
         # Count the occurrences of each tag value
