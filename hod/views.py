@@ -471,6 +471,7 @@ def update_class(request, class_id):
     return render(request, 'hod/class/update_class.html', context=context)
 
 
+
 @hod_required
 def delete_class(request, class_id):
     classes = Class.objects.get(id=class_id)
