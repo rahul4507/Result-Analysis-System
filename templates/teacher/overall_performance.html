@@ -15,15 +15,12 @@
         </div>
     </div>
     <br>
-<<<<<<< HEAD
+    {% if overall_course_perf.exists %}
     {% if res_data.exists %}
     <div>
         {{Performance_Distribution|safe}}
     </div>
     <br><br>
-=======
-    {% if overall_course_perf.exists %}
->>>>>>> developer
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -33,11 +30,8 @@
         </tr>
         </thead>
         <tbody>
-<<<<<<< HEAD
+        {% for result in overall_course_perf %}S
         {% for result in res_data %}
-=======
-        {% for result in overall_course_perf %}
->>>>>>> developer
         <tr>
             <td>{{ result.student_id.name }}</td>
             <td>{{ result.student_id.prn }}</td>

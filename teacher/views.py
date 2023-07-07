@@ -303,13 +303,11 @@ def performance_analysis(request, pk):
     return render(request, 'teacher/performance_analysis.html', context)
 
 
-<<<<<<< HEAD
-=======
+
 def performance_analysis_download(request, pk):
     pass
 
 
->>>>>>> developer
 @teacher_required
 def overall_performance(request, pk):
     teacher_enroll = TeacherEnrollment.objects.get(pk=pk)
