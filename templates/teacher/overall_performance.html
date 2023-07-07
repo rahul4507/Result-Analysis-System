@@ -16,6 +16,11 @@
     </div>
     <br>
     {% if overall_course_perf.exists %}
+    {% if res_data.exists %}
+    <div>
+        {{Performance_Distribution|safe}}
+    </div>
+    <br><br>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -25,7 +30,8 @@
         </tr>
         </thead>
         <tbody>
-        {% for result in overall_course_perf %}
+        {% for result in overall_course_perf %}S
+        {% for result in res_data %}
         <tr>
             <td>{{ result.student_id.name }}</td>
             <td>{{ result.student_id.prn }}</td>
