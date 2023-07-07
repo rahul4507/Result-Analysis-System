@@ -43,11 +43,18 @@
 
 <!--Compare performance of students in Two different exams-->
 <div class="container my-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">{{ teacher_enroll.course_id.name }} - {{ teacher_enroll.course_id.code }}</h2>
+            <h4 class="card-subtitle mb-2 text-muted"
+                        >{{ teacher_enroll.class_id.semester }} - {{ teacher_enroll.class_id.division }}</h4>
+        </div>
+    </div>
+    <br>
     <h4>Compare Student Performance</h4>
     <div>
       <div class="row">
         <div class="col-md-6">
-
           <form method="post" enctype="multipart/form-data"  novalidate>
             {% csrf_token %}
               <p>Select First Exam Results</p>
@@ -104,6 +111,12 @@
             {% endfor %}
               </tbody>
             </table>
+            <div>
+            {% for name in res_data|slice:":1" %}
+            <button class="btn btn-primary" onclick="window.location.href='{% url 'teacher:download_results' pk=name.exam_id.id %}'">Download Results</button>
+            {% endfor %}
+            </div>
+            <br>
             <hr>
             <div>
                 {{Types | safe}}

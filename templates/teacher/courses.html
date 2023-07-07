@@ -21,6 +21,7 @@
                 </a>
                 <a href="{% url 'teacher:student_performance' pk=t.id %}"><i class="fas fa-graduation-cap text-success pl-3 pb-3"></i> Student Performance</a>
                 <a href="{% url 'teacher:performance_Analysis' pk=t.id %}"><i class="fas fa-graduation-cap text-success pl-3 pb-3"></i> Student Performance Analysis</a>
+                <a href="{% url 'teacher:overall_Performance' pk=t.id %}"><i class="fas fa-graduation-cap text-success pl-3 pb-3"></i> Overall Performance</a>
             </div>
         </div>
         {% endfor %}

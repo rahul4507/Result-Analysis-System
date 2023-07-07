@@ -27,6 +27,8 @@ th {
     <div class="card">
         <div class="card-header">
             <h2 class="card-title">{{ teacher_enroll.course_id.name }} - {{ teacher_enroll.course_id.code }}</h2>
+            <h4 class="card-subtitle mb-2 text-muted"
+                        >{{ teacher_enroll.class_id.semester }} - {{ teacher_enroll.class_id.division }}</h4>
         </div>
     </div>
     <br>
@@ -51,7 +53,6 @@ th {
     {%for name in res_data|slice:":1"%}
     <h4>Result of {{name.exam_id.name}} Total Marks : {{name.exam_id.total_marks}}</h4>
     {%endfor%}
-
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -72,9 +73,15 @@ th {
       {%endfor%}
       </tbody>
     </table>
-        <div>
-            {{Performance_Distribution | safe}}
-        </div>
+    <div>
+    {% for name in res_data|slice:":1" %}
+    <button class="btn btn-primary" onclick="window.location.href='{% url 'teacher:download_results' pk=name.exam_id.id %}'">Download Results</button>
+    {% endfor %}
+    </div>
+    <br>
+    <div>
+        {{Performance_Distribution | safe}}
+    </div>
     {% else %}
     <h6>NO DATA FOUND</h6>
     {%endif%}
