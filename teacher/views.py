@@ -1,14 +1,15 @@
 import plotly.graph_objs as go
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Count, Case, When
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.http import HttpResponse
 
-from student.models import StudentResult, StudentEnrollment
+from student.models import StudentResult
 from teacher.models import Teacher, TeacherEnrollment
 from user.models import Exam
 from user.permission import teacher_required
+from teacher.process_data import generate_csv, generate_comparison_csv
 
 
 class TeacherLoginView(View):
@@ -97,8 +98,17 @@ def student_performance(request, pk):
         colors = ['red', 'green', 'blue']
 
         category_order = ['FAST', 'MODERATE', 'WEAK']
+        trace = go.Bar(
+            x=labels,
+            y=values,
+            marker=dict(color=colors)
+        )
 
-        fig = go.Figure(data=[go.Bar(x=labels, y=values, marker=dict(color=colors))])
+        # Adjust the bar width
+        trace.marker.line.width = 2  # Width of the bar border
+        trace.width = 0.3  # Width of the bars
+
+        fig = go.Figure(data=[trace])
         fig.update_layout(
             title='Tag Distribution',
             xaxis_title='Performance',
@@ -114,11 +124,23 @@ def student_performance(request, pk):
 
 
 @teacher_required
+def student_download_results(request, pk):
+    teacher_enroll = TeacherEnrollment.objects.get(pk=pk)
+    res_data = StudentResult.objects.filter(exam_id=pk, course_id=teacher_enroll.course_id,
+                                            class_id=teacher_enroll.class_id)
+
+    csv_data = generate_csv(res_data)  # Implement this function to convert data to CSV format
+
+    # Create a response with the CSV file
+    response = HttpResponse(csv_data, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="result_data.csv"'
+    return response
+
+
+@teacher_required
 def performance_analysis(request, pk):
     teacher_enroll = get_object_or_404(TeacherEnrollment, pk=pk)
     exams = Exam.objects.all()
-    res_data1 = []
-    res_data2 = []
     transition_count1 = {
         'WEAK_to_FAST': [],
         'MODERATE_to_FAST': [],
@@ -203,8 +225,16 @@ def performance_analysis(request, pk):
                        len(transition_count1['MODERATE_to_WEAK']),
                        len(transition_count1['WEAK_to_WEAK'])]
             colors1 = ['green', 'red', 'blue', 'yellow', 'pink', 'indigo', 'orange', 'gray', 'brown']
+            trace = go.Bar(
+                x=labels1,
+                y=values1,
+                marker=dict(color=colors1)
+            )
+            # Adjust the bar width
+            trace.marker.line.width = 2  # Width of the bar border
+            trace.width = 0.3  # Width of the bars
 
-            fig1 = go.Figure(data=[go.Bar(x=labels1, y=values1, marker=dict(color=colors1))])
+            fig1 = go.Figure(data=[trace])
             fig1.update_layout(title='Performance', xaxis_title='Transition Types', yaxis_title='Count')
             progression = (len(transition_count1['WEAK_to_FAST']) + len(transition_count1['WEAK_to_MODERATE']) + len(
                 transition_count1['MODERATE_to_FAST']))
@@ -217,8 +247,17 @@ def performance_analysis(request, pk):
             labels2 = ['Progressive_Students', 'Stable_Students', 'Degrading_Students']
             values2 = [progression, stable, degradation]
             colors2 = ['green', 'blue', 'red']
+            trace = go.Bar(
+                x=labels2,
+                y=values2,
+                marker=dict(color=colors2)
+            )
 
-            fig2 = go.Figure(data=[go.Bar(x=labels2, y=values2, marker=dict(color=colors2))])
+            # Adjust the bar width
+            trace.marker.line.width = 2  # Width of the bar border
+            trace.width = 0.3  # Width of the bars
+
+            fig2 = go.Figure(data=[trace])
             fig2.update_layout(title='Performance', xaxis_title='Transition Types', yaxis_title='Count')
             context = {
                 'teacher_enroll': teacher_enroll,
@@ -264,6 +303,13 @@ def performance_analysis(request, pk):
     return render(request, 'teacher/performance_analysis.html', context)
 
 
+<<<<<<< HEAD
+=======
+def performance_analysis_download(request, pk):
+    pass
+
+
+>>>>>>> developer
 @teacher_required
 def overall_performance(request, pk):
     teacher_enroll = TeacherEnrollment.objects.get(pk=pk)
@@ -294,17 +340,41 @@ def overall_performance(request, pk):
 
         category_order = ['FAST', 'MODERATE', 'WEAK']
 
-        fig = go.Figure(data=[go.Bar(x=labels, y=values, marker=dict(color=colors))])
+        trace = go.Bar(
+            x=labels,
+            y=values,
+            marker=dict(color=colors)
+        )
+
+        # Adjust the bar width
+        trace.marker.line.width = 2  # Width of the bar border
+        trace.width = 0.3  # Width of the bars
+
+        fig = go.Figure(data=[trace])
         fig.update_layout(
-            title='Tag Distribution',
+            title='Overall Performance',
             xaxis_title='Performance',
             yaxis_title='Students',
             xaxis=dict(type='category', categoryorder='array', categoryarray=category_order)
         )
 
         return render(request, 'teacher/overall_performance.html',
-                      context={'teacher_enroll': teacher_enroll, 'exams': exam, 'res_data': res_data,
-                               'Performance_Distribution': fig.to_html()})
+                      context={'teacher_enroll': teacher_enroll, 'exams': exam, 'overall_course_perf': res_data,
+                               'overall_performance': fig.to_html()})
     else:
         return render(request, 'teacher/overall_performance.html',
-                      context={'teacher_enroll': teacher_enroll, 'exams': exam, 'res_data': []})
+                      context={'teacher_enroll': teacher_enroll, 'exams': exam, 'overall_course_perf': []})
+
+
+def student_download_results_overall(request, pk):
+    teacher_enroll = TeacherEnrollment.objects.get(pk=pk)
+    exam = Exam.objects.get(name='Total')
+    res_data = StudentResult.objects.filter(exam_id=exam, course_id=teacher_enroll.course_id,
+                                            class_id=teacher_enroll.class_id)
+
+    csv_data = generate_csv(res_data)  # Implement this function to convert data to CSV format
+
+    # Create a response with the CSV file
+    response = HttpResponse(csv_data, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="overall_result_data.csv"'
+    return response
