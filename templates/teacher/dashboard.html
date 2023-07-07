@@ -6,47 +6,5 @@
 {% if request.user.is_authenticated %}
 {% include 'teacher/sidebar.html' %}
 {% endif %}
-<!--<button class="main-b toggle-button btn btn-primary mb-4">Overall Performance</button>-->
-<!--<div class="toggle-content" style="display: none;">-->
-    <div class="container my-4">
-        <div class="form-row">
-            {% if teacher_enroll %}
-            {% for t in teacher_enroll %}
-            <div class="col-md-4">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ t.course_id.name }} - {{ t.course_id.code }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted"
-                        >{{ t.class_id.semester }} - {{ t.class_id.division }}</h6>
-                    </div>
-                    <a href="{% url 'teacher:overall_Performance' pk=t.id %}"><i
-                            class="fas fa-graduation-cap text-success pl-3 pb-3"></i>Overall Performance</a>
-                </div>
-            </div>
-            {% endfor %}
-            {% else %}
-            <p class="lead">You have not being enrolled in any courses yet.</p>
-            {% endif %}
-
-        </div>
-    </div>
-</div>
-<!--<br>-->
-<!--<button class="main-b toggle-button btn btn-primary">Analysis</button>-->
-<!--<div class="toggle-content" style="display: none;">-->
-<!--    <div class="container my-4">-->
-<!--        <h1>We Will Finish it</h1>-->
-<!--    </div>-->
-<!--</div>-->
-<script>
-    // JavaScript code to toggle visibility of the content
-    var toggleButtons = document.getElementsByClassName('toggle-button');
-    for (var i = 0; i < toggleButtons.length; i++) {
-        toggleButtons[i].addEventListener('click', function() {
-            var content = this.nextElementSibling;
-            content.style.display = (content.style.display === 'none') ? 'block' : 'none';
-        });
-    }
-
-</script>
+Plot The Success Index Graph here.
 {% endblock %}

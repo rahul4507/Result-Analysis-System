@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Teacher Dashboard{% endblock %}
+{% block title %}Overall Performance{% endblock %}
 
 {% block content %}
 {% if request.user.is_authenticated %}
@@ -10,14 +10,12 @@
     <div class="card">
         <div class="card-header">
             <h2 class="card-title">{{ teacher_enroll.course_id.name }} - {{ teacher_enroll.course_id.code }}</h2>
+            <h4 class="card-subtitle mb-2 text-muted"
+                        >{{ teacher_enroll.class_id.semester }} - {{ teacher_enroll.class_id.division }}</h4>
         </div>
     </div>
     <br>
     {% if overall_course_perf.exists %}
-    <div>
-        {{overall_performance|safe}}
-    </div>
-    <br><br>
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -27,15 +25,22 @@
         </tr>
         </thead>
         <tbody>
-        {% for prn,student_name, tag in overall_course_perf %}
+        {% for result in overall_course_perf %}
         <tr>
-            <td>{{ student_name }}</td>
-            <td>{{ prn }}</td>
-            <td>{{ tag }}</td>
+            <td>{{ result.student_id.name }}</td>
+            <td>{{ result.student_id.prn }}</td>
+            <td>{{ result.TAG }}</td>
         </tr>
         {%endfor%}
         </tbody>
     </table>
+    <div>
+    <button class="btn btn-primary" onclick="window.location.href='{% url 'teacher:download_results_overall' pk=teacher_enroll.id %}'">Download Results</button>
+    </div>
+    <br>
+     <div>
+        {{overall_performance|safe}}
+     </div>
     {% else %}
     <h4 class="text-center"> No data found.</h4>
     {% endif %}
