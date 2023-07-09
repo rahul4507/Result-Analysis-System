@@ -22,7 +22,9 @@
             <div class="form-group col-md-3 mb-0">
                 <select class="form-control" name="examId">
                     {% for e in exams %}
+                    {% if  e.name != "TOTAL" %}
                     <option value="{{ e.id }}">{{ e.name }}</option>
+                    {%endif%}
                     {% endfor %}
                 </select>
             </div>

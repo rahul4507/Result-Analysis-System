@@ -310,11 +310,10 @@ def performance_analysis_download(request, pk):
 @teacher_required
 def overall_performance(request, pk):
     teacher_enroll = TeacherEnrollment.objects.get(pk=pk)
-    exam = Exam.objects.get(name='Total')
-    res_data = StudentResult.objects.filter(exam_id=exam, course_id=teacher_enroll.course_id,
-                                            class_id=teacher_enroll.class_id)
-
-    if res_data:
+    t = Exam.objects.get(name='TOTAL')
+    total_data = StudentResult.objects.filter(exam_id=t, course_id=teacher_enroll.course_id,
+                                              class_id=teacher_enroll.class_id)
+    if total_data:
         # Count the occurrences of each tag value
         tag_counts = {
             'WEAK': 0,
@@ -322,7 +321,7 @@ def overall_performance(request, pk):
             'MODERATE': 0
         }
 
-        for result in res_data:
+        for result in total_data:
             if result.TAG == 'WEAK':
                 tag_counts['WEAK'] += 1
             elif result.TAG == 'FAST':
@@ -356,16 +355,16 @@ def overall_performance(request, pk):
         )
 
         return render(request, 'teacher/overall_performance.html',
-                      context={'teacher_enroll': teacher_enroll, 'exams': exam, 'overall_course_perf': res_data,
+                      context={'teacher_enroll': teacher_enroll, 'exams': t, 'overall_course_perf': total_data,
                                'overall_performance': fig.to_html()})
     else:
         return render(request, 'teacher/overall_performance.html',
-                      context={'teacher_enroll': teacher_enroll, 'exams': exam, 'overall_course_perf': []})
+                      context={'teacher_enroll': teacher_enroll, 'exams': t, 'overall_course_perf': []})
 
 
 def student_download_results_overall(request, pk):
     teacher_enroll = TeacherEnrollment.objects.get(pk=pk)
-    exam = Exam.objects.get(name='Total')
+    exam = Exam.objects.get(name='TOTAL')
     res_data = StudentResult.objects.filter(exam_id=exam, course_id=teacher_enroll.course_id,
                                             class_id=teacher_enroll.class_id)
 

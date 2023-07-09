@@ -46,10 +46,11 @@ class StudentResult(models.Model):
 
     @classmethod
     def update(cls, exam_id, course_id, class_id, result_data_file):
+        global z, x, y
         df = pd.read_csv(result_data_file)
         df = df.fillna(0)
+        enrolled_students = StudentEnrollment.objects.filter(course_id=course_id, class_id=class_id)
         for idx, row in df.iterrows():
-            enrolled_students = StudentEnrollment.objects.filter(course_id=course_id, class_id=class_id)
             for ens in enrolled_students:
                 obtained_marks = row['MARKS'] if ens.student_id.prn == row['PRN'] else 0
                 result, created = StudentResult.objects.get_or_create(
@@ -63,6 +64,57 @@ class StudentResult(models.Model):
                     updated_obtained_marks = row['MARKS'] if ens.student_id.prn == row['PRN'] else result.obtained_marks
                     result.obtained_marks = updated_obtained_marks
                 result.save()
+        mse = Exam.objects.get(name='MSE')
+        ese = Exam.objects.get(name='ESE')
+        ia = Exam.objects.get(name='IA')
+        t = Exam.objects.get(name='TOTAL')
+        if mse and ese and ia:
+            mse_data = StudentResult.objects.filter(exam_id=mse.id, course_id=course_id,
+                                                    class_id=class_id)
+            ese_data = StudentResult.objects.filter(exam_id=ese.id, course_id=course_id,
+                                                    class_id=class_id)
+            ia_data = StudentResult.objects.filter(exam_id=ia.id, course_id=course_id,
+                                                   class_id=class_id)
+            # Assuming you have imported the necessary models and variables
+
+            for ens in enrolled_students:
+                # Initialize variables
+                x = 0
+                y = 0
+                z = 0
+
+                # Find the corresponding marks from mse_data
+                for i in mse_data:
+                    if ens.student_id.prn == i.student_id.prn:
+                        x = i.obtained_marks
+                        break
+
+                # Find the corresponding marks from ese_data
+                for j in ese_data:
+                    if ens.student_id.prn == j.student_id.prn:
+                        y = j.obtained_marks
+                        break
+
+                # Find the corresponding marks from ia_data
+                for k in ia_data:
+                    if ens.student_id.prn == k.student_id.prn:
+                        z = k.obtained_marks
+                        break
+
+                # Calculate the total obtained marks
+                total = int(round(z + (7 * (x + y)) / 10))
+
+                # Update or create the StudentResult instance
+                student_result, created = StudentResult.objects.update_or_create(
+                    exam_id=t,
+                    course_id=course_id,
+                    student_id=ens.student_id,
+                    class_id=class_id,
+                    defaults={'obtained_marks': total}
+                )
+
+            # Call the updateTAG method to update the TAGs
+            StudentResult.updateTAG(t.id, course_id, class_id)
 
     @classmethod
     def updateTAG(cls, exam_id, course_id, class_id):
