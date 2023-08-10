@@ -1,6 +1,2 @@
-# Result Analysis System
+an website that visualizes students result data into charts and graphs.
 
-### Dump data
-python manage.py loaddata fixtures\semesters.json
-
-python manage.py loaddata fixtures\class.json
