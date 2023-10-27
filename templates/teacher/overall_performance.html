@@ -6,7 +6,13 @@
 {% if request.user.is_authenticated %}
 {% include 'teacher/sidebar.html' %}
 {% endif %}
-<div class="container my-4">
+<style>
+     .container{
+        max-width:100%;
+        margin-left=30px;
+    }
+</style>
+<div class="container ">
     <div class="card">
         <div class="card-header">
             <h2 class="card-title">{{ teacher_enroll.course_id.name }} - {{ teacher_enroll.course_id.code }}</h2>

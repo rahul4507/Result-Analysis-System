@@ -114,7 +114,6 @@ class StudentResult(models.Model):
                 )
 
             # Call the updateTAG method to update the TAGs
-            StudentResult.updateTAG(t.id, course_id, class_id)
 
     @classmethod
     def updateTAG(cls, exam_id, course_id, class_id):

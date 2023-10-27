@@ -62,6 +62,8 @@ def teacher_course_detail(request, pk):
     if request.method == 'POST':
         exam_id = request.POST.get('examId')
         result_data_file = request.FILES.get('studentResultFile')
+        slow_cutoff=request.POST.get('slow-cutoff')
+        moderate_cutoff=request.POST.get('moderate-cutoff')
         StudentResult.update(exam_id, teacher_enroll.course_id, teacher_enroll.class_id, result_data_file)
         StudentResult.updateTAG(exam_id, teacher_enroll.course_id, teacher_enroll.class_id)
     return render(request, 'teacher/course_detail.html',
