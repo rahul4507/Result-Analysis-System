@@ -20,19 +20,17 @@ class StudentLoginView(View):
         return render(request, 'student/login.html')
 
     def post(self, request):
-        email = request.POST.get('email')
+        prn = request.POST.get('prn')
         password = request.POST.get('password')
-        user = authenticate(request, email=email, password=password)
-        if user is not None:
-            if user.role != CustomUser.Role.STUDENT:
-                return render(request, 'student/login.html', {'error': 'Please login with a Student account.'})
-            try:
-                Student.objects.get(user=user)
-            except Student.DoesNotExist:
-                return render(request, 'student/login.html', {'error': 'Please login with Student account.'})
-            else:
-                login(request, user)
-                return redirect('student:student_dashboard')
+        try:
+            student = Student.objects.get(prn=prn)
+        except Student.DoesNotExist:
+            return render(request, 'student/login.html', {'error': 'Invalid PRN. Please login with a Student account.'})
+
+        user = student.user
+        if user.check_password(password):
+            login(request, user)
+            return redirect('student:student_dashboard')
         else:
             return render(request, 'student/login.html', {'error': 'Invalid login credentials. Please try again.'})
 

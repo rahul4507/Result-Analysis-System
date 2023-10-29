@@ -22,4 +22,6 @@ local_settings.py
 .env
 /venv
 # Ignore migrations, as they can be generated automatically
-**/migrations/
+**/migrations/**
+!**/migrations/__init__.py
+
