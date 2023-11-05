@@ -116,22 +116,16 @@ class StudentResult(models.Model):
             # Call the updateTAG method to update the TAGs
 
     @classmethod
-    def updateTAG(cls, exam_id, course_id, class_id):
+    def updateTAG(cls, exam_id, course_id, class_id, slow_cutoff, moderate_cutoff):
         student_results = StudentResult.objects.filter(course_id=course_id, class_id=class_id, exam_id=exam_id)
-        min_marks = 100
-        max_marks = 0
+        exam = Exam.objects.get(pk=exam_id)
+        total_marks = exam.total_marks
+        slow = (total_marks * int(slow_cutoff)) / 100
+        moderate = (total_marks * int(moderate_cutoff)) / 100
         for res in student_results:
-            if min_marks > res.obtained_marks:
-                min_marks = res.obtained_marks
-            if max_marks < res.obtained_marks:
-                max_marks = res.obtained_marks
-        mid = (min_marks + max_marks) / 2
-        factor = (max_marks - min_marks) / 100
-        norm = 17.5 * factor
-        for res in student_results:
-            if res.obtained_marks < mid - norm:
+            if res.obtained_marks < slow:
                 tag = "WEAK"
-            elif res.obtained_marks > mid + norm:
+            elif res.obtained_marks > moderate:
                 tag = "FAST"
             else:
                 tag = "MODERATE"
@@ -143,11 +137,5 @@ class StudentResult(models.Model):
                 defaults={'TAG': tag},
             )
             if not created:
-                if res.obtained_marks < mid - norm:
-                    tag = "WEAK"
-                elif res.obtained_marks > mid + norm:
-                    tag = "FAST"
-                else:
-                    tag = "MODERATE"
                 result.TAG = tag
             result.save()

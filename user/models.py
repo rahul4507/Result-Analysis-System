@@ -81,7 +81,7 @@ class Class(models.Model):
 
 class Exam(models.Model):
     name = models.CharField(max_length=8, null=True, blank=True)
-    total_marks = models.FloatField()
+    total_marks = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

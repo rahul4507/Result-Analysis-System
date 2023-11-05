@@ -81,7 +81,7 @@ th {
     </table>
     <div>
     {% for name in res_data|slice:":1" %}
-    <button class="btn btn-primary" onclick="window.location.href='{% url 'teacher:download_results' pk=name.exam_id.id %}'">Download Results</button>
+    <button class="btn btn-primary" onclick="window.location.href='{% url 'teacher:download_results' pk=teacher_enroll.id pk2=name.course_id.id exam_id=name.exam_id.name%}'">Download Results</button>
     {% endfor %}
     </div>
     <br>

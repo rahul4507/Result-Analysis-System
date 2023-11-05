@@ -7,7 +7,7 @@ from django.http import HttpResponse
 
 from student.models import StudentResult
 from teacher.models import Teacher, TeacherEnrollment
-from user.models import Exam
+from user.models import Exam, Course, Class, Semester
 from user.permission import teacher_required
 from teacher.process_data import generate_csv, generate_comparison_csv
 
@@ -62,10 +62,11 @@ def teacher_course_detail(request, pk):
     if request.method == 'POST':
         exam_id = request.POST.get('examId')
         result_data_file = request.FILES.get('studentResultFile')
-        slow_cutoff=request.POST.get('slow-cutoff')
-        moderate_cutoff=request.POST.get('moderate-cutoff')
+        slow_cutoff = request.POST.get('slow-cutoff')
+        moderate_cutoff = request.POST.get('moderate-cutoff')
         StudentResult.update(exam_id, teacher_enroll.course_id, teacher_enroll.class_id, result_data_file)
-        StudentResult.updateTAG(exam_id, teacher_enroll.course_id, teacher_enroll.class_id)
+        StudentResult.updateTAG(exam_id, teacher_enroll.course_id, teacher_enroll.class_id, slow_cutoff,
+                                moderate_cutoff)
     return render(request, 'teacher/course_detail.html',
                   context={'teacher_enroll': teacher_enroll, 'exams': exams})
 
@@ -117,7 +118,8 @@ def student_performance(request, pk):
             yaxis_title='Students',
             xaxis=dict(type='category', categoryorder='array', categoryarray=category_order)
         )
-
+        res_data = StudentResult.objects.filter(exam_id=exam, course_id=teacher_enroll.course_id,
+                                                class_id=teacher_enroll.class_id)[:5]
         return render(request, 'teacher/course_performance.html',
                       context={'teacher_enroll': teacher_enroll, 'exams': exams, 'res_data': res_data,
                                'Performance_Distribution': fig.to_html()})
@@ -126,9 +128,11 @@ def student_performance(request, pk):
 
 
 @teacher_required
-def student_download_results(request, pk):
-    teacher_enroll = TeacherEnrollment.objects.get(pk=pk)
-    res_data = StudentResult.objects.filter(exam_id=pk, course_id=teacher_enroll.course_id,
+def student_download_results(request, pk, pk2, exam_id):
+    course = Course.objects.get(pk=pk2)
+    teacher_enroll = TeacherEnrollment.objects.get(teacher_id=pk, course_id=course)
+    exam = Exam.objects.get(name=exam_id)
+    res_data = StudentResult.objects.filter(exam_id=exam, course_id=teacher_enroll.course_id,
                                             class_id=teacher_enroll.class_id)
 
     csv_data = generate_csv(res_data)  # Implement this function to convert data to CSV format
@@ -214,7 +218,6 @@ def performance_analysis(request, pk):
                     elif (i.TAG == "FAST" and j.TAG == "FAST") and (i.student_id.prn == j.student_id.prn):
                         transition_count1['FAST_to_FAST'].append(i)
                         transition_count2['FAST_to_FAST'].append(j)
-
         else:
             validate = 0
         if validate:
@@ -261,6 +264,16 @@ def performance_analysis(request, pk):
 
             fig2 = go.Figure(data=[trace])
             fig2.update_layout(title='Performance', xaxis_title='Transition Types', yaxis_title='Count')
+
+            for key, value in transition_count1.items():
+                transition_count1[key] = value[:5]
+
+            for key, value in transition_count2.items():
+                transition_count2[key] = value[:5]
+
+            res_data1 = res_data1[:8]
+            res_data2 = res_data2[:8]
+
             context = {
                 'teacher_enroll': teacher_enroll,
                 'exams': exams,
@@ -315,6 +328,7 @@ def overall_performance(request, pk):
     t = Exam.objects.get(name='TOTAL')
     total_data = StudentResult.objects.filter(exam_id=t, course_id=teacher_enroll.course_id,
                                               class_id=teacher_enroll.class_id)
+
     if total_data:
         # Count the occurrences of each tag value
         tag_counts = {
@@ -355,7 +369,8 @@ def overall_performance(request, pk):
             yaxis_title='Students',
             xaxis=dict(type='category', categoryorder='array', categoryarray=category_order)
         )
-
+        total_data = StudentResult.objects.filter(exam_id=t, course_id=teacher_enroll.course_id,
+                                                  class_id=teacher_enroll.class_id)[:5]
         return render(request, 'teacher/overall_performance.html',
                       context={'teacher_enroll': teacher_enroll, 'exams': t, 'overall_course_perf': total_data,
                                'overall_performance': fig.to_html()})
@@ -376,3 +391,50 @@ def student_download_results_overall(request, pk):
     response = HttpResponse(csv_data, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="overall_result_data.csv"'
     return response
+
+
+def create_course(request):
+    teacher_enroll = TeacherEnrollment.objects.filter(teacher_id__user=request.user)
+
+    print(teacher_enroll)
+    context = {'class': Class.objects.all(), 'teacher_enroll': teacher_enroll}
+    if request.method == 'POST':
+        teacher_enroll = TeacherEnrollment.objects.filter(teacher_id__user=request.user)
+        name = request.POST.get('name')
+        code = request.POST.get('code')
+        credit = request.POST.get('credits')
+        semester_id = request.POST.get('semester')
+        is_optional = request.POST.get('is_optional', 'off')
+        if is_optional == 'on':
+            set_optional = True
+        else:
+            set_optional = False
+        semester = get_object_or_404(Semester, pk=semester_id)
+        course = Course(name=name, code=code, credits=credit, semester=semester,
+                        is_active=True, is_optional=set_optional)
+        course.save()
+        # Enroll the current teacher in that course
+
+        teacher_instance = Teacher.objects.get(user_id=request.user)
+        course_instance = course
+        class_instance = Class.objects.get(pk=semester_id)
+        teacher_enrollment = TeacherEnrollment.objects.create(
+            teacher_id=teacher_instance,
+            course_id=course_instance,
+            class_id=class_instance,
+        )
+        teacher_enrollment.save()
+        return redirect('teacher:teacher_courses')
+    else:
+        return render(request, 'teacher/create_course.html', context=context)
+
+
+def delete_course(request, pk):
+    teacher_enroll = TeacherEnrollment.objects.filter(teacher_id__user=request.user)
+    print(teacher_enroll)
+    if request.method == 'POST':
+        course = get_object_or_404(Course, pk=pk)
+        course.delete()
+        return redirect('teacher:teacher_courses')
+    else:
+        return render(request, 'teacher/delete_course.html', {'teacher_enroll': teacher_enroll})

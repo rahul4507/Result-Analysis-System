@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Teacher courses{% endblock %}
+
+{% block content %}
+  {% if request.user.is_authenticated %}
+    {% include 'teacher/sidebar.html' %}
+  {% endif %}
+<div class="container m-0">
+  <div class="form-container">
+    <h2>Create Course</h2>
+    <form method="POST" action="{% url 'teacher:create_course' %}">
+      {% csrf_token %}
+      <div class="form-row">
+        <label for="name">Name<span aria-hidden="true" class="req_icon">*</span></label>
+        <input type="text" id="name" name="name" class="form-control" required>
+      </div>
+      <div class="form-row">
+        <label for="code">Code</label>
+        <input type="text" id="code" name="code" class="form-control">
+      </div>
+
+      <div class="form-row">
+        <label for="credits">Credits<span aria-hidden="true" class="req_icon">*</span></label>
+        <input type="text" id="credits" name="credits" class="form-control" required>
+      </div>
+
+      <div class="form-row">
+        <label for="semester">Semester<span aria-hidden="true" class="req_icon">*</span></label>
+        <select id="semester" name="semester" class="form-control" required>
+          {% for semester in class %}
+            <option value="{{ semester.id }}">{{ semester }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-row">
+  <label for="is_optional" class="optional-label">Optional:</label>
+  <div class="checkbox-container">
+    <input type="checkbox" id="is_optional" name="is_optional" class="styled-checkbox">
+    <span class="checkmark"></span>
+  </div>
+</div>
+
+      <div class="form-row">
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+    </form>
+  </div>
+</div>
+<style>
+
+       .req_icon{
+        color:red;
+    }
+    .container {
+        max-width: 100%; /* Full width */
+        margin: 0;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-container {
+        margin: 0;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+   label {
+        display: block;
+        font-weight: bold;
+    }
+
+    .form-row {
+        margin: 10px 0;
+    }
+
+  input[type="text"]
+    {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+  input.form-control,
+  select.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  input[type="checkbox"] {
+    margin-top: 5px;
+  }
+
+  button.btn {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button.btn:hover {
+    background-color: #0056b3;
+  }
+
+  button.btn-primary {
+    background-color: #007bff;
+  }
+
+  button.btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  button.btn-secondary {
+    background-color: #007bff;
+  }
+
+  button.btn-secondary:hover {
+    background-color: #0056b3;
+  }
+  /* Style for the label */
+.optional-label {
+  display: inline-block;
+  font-weight: bold;
+  margin-right: 10px;
+  color: #333; /* Change the color to your preference */
+}
+
+/* Style for the checkbox container */
+.checkbox-container {
+  display: inline-block;
+  position: relative;
+}
+
+/* Hide the default checkbox */
+.styled-checkbox {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+
+/* Style for the custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px; /* Adjust the size as needed */
+  height: 20px; /* Adjust the size as needed */
+  border: 2px solid #007bff; /* Color for the checkbox border */
+  background-color: #fff; /* Background color for the checkbox */
+}
+
+/* Show a checkmark when the checkbox is checked */
+.styled-checkbox:checked + .checkmark:after {
+  content: "";
+  position: absolute;
+  top: 0%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  width: 5px; /* Width of the checkmark */
+  height: 15px; /* Height of the checkmark */
+  border: solid #007bff; /* Color for the checkmark */
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg); /* Rotate the checkmark to appear as a "✓" */
+}
+
+</style>
+{% endblock %}

@@ -11,7 +11,9 @@
         font-family: Arial, sans-serif;
         background-color: #f2f2f2;
     }
-
+    .req_icon{
+        color:red;
+    }
     .container {
         max-width: 100%; /* Full width */
         margin: 0;
@@ -72,7 +74,8 @@
     <br>
     <h4>Upload Results</h4>
     <div class="form-container">
-        <form method="POST" action="your_action_url_here">
+        <form method="POST" enctype="multipart/form-data" action="{% url 'teacher:teacher_course_detail' pk=teacher_enroll.id %}" >
+            {% csrf_token %}
             <div class="form-row">
                 <label for="examId">Select Exam:</label>
                 <select class="form-control" name="examId" id="examId">
@@ -85,18 +88,18 @@
             </div>
 
             <div class="form-row">
-                <label for="studentResultFile">Upload Student Result:</label>
-                <input type="file" name="studentResultFile" id="studentResultFile">
+                <label for="studentResultFile">Upload Student Result<span aria-hidden="true" class="req_icon">*</span></label>
+                <input type="file" name="studentResultFile" id="studentResultFile" required>
             </div>
 
             <div class="form-row">
-                <label for="slow-cutoff">Slow-Moderate:</label>
-                <input type="text" name="slow-cutoff" id="slow-cutoff">
+                <label for="slow-cutoff">Slow-Moderate<span aria-hidden="true" class="req_icon">*</span></label>
+                <input type="text" name="slow-cutoff" id="slow-cutoff" required>
             </div>
 
             <div class="form-row">
-                <label for="moderate-cutoff">Advance-Moderate:</label>
-                <input type="text" name="moderate-cutoff" id="moderate-cutoff">
+                <label for="moderate-cutoff">Advance-Moderate<span aria-hidden="true" class="req_icon">*</span></label>
+                <input type="text" name="moderate-cutoff" id="moderate-cutoff" required>
             </div>
 
             <div class="form-row">

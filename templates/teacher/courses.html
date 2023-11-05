@@ -9,14 +9,21 @@
 <style>
     .container{
         max-width:100%;
-        margin-left=30px;
+         margin-left=30px;
+    }
+    .card
+    {
+        height:100%;
+    }
+    .our_card {
+        margin-bottom:13px;
     }
 </style>
 <div class="container">
     <div class="form-row">
         {% if teacher_enroll %}
         {% for t in teacher_enroll %}
-        <div class="col-md-4">
+        <div class="col-md-4 our_card">
             <div class="card mb-3">
                 <a href="{% url 'teacher:teacher_course_detail' pk=t.id %}">
                     <div class="card-body">
@@ -31,9 +38,35 @@
             </div>
         </div>
         {% endfor %}
-        {% else %}
-        <p class="lead">You don't have any courses yet.</p>
+        <div class="col-md-4 our_card">
+            <div class="card mb-3">
+                {% for t in teacher_enroll|slice:":1" %}
+                <a href="{% url 'teacher:create_course' %}">
+                    <div class="card-body" style="align:center; ">
+                        <h4>Create Course</h4>
+                    </div>
+                </a>
+                <a href="{% url 'teacher:delete_course' pk=t.course_id.id %}">
+                    <div class="card-body" style="align:center; ">
+                        <h4>Delete Course</h4>
+                    </div>
+                </a>
+                {%endfor%}
+            </div>
+        </div>
+        {%else%}
+        <div class="col-md-4 our_card">
+            <div class="card mb-3">
+
+                <a href="{% url 'teacher:create_course' %}">
+                    <div class="card-body" style="align:center; ">
+                        <h4>Create Course</h4>
+                    </div>
+                </a>
+            </div>
+        </div>
         {% endif %}
+
     </div>
 </div>
 {% endblock %}
