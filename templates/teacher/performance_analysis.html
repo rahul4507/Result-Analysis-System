@@ -88,13 +88,7 @@
     <div>
         {% if validate%}
             <hr>
-            {% for sr1 in res_data1|slice:":1"%}
-                {%for sr2 in res_data2%}
-                    {% if sr1.student_id|stringformat:"s" == sr2.student_id|stringformat:"s" %}
-                        <h6>Analysis of {{ sr1.exam_id.name }} and {{ sr2.exam_id.name }}</h6>
-                    {%endif%}
-                {%endfor%}
-            {%endfor%}
+            <h6>Analysis of {{ exam1 }} and {{ exam2}}</h6>
             <table class="table table-bordered">
               <thead>
                 <tr>

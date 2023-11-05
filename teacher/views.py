@@ -130,7 +130,7 @@ def student_performance(request, pk):
 @teacher_required
 def student_download_results(request, pk, pk2, exam_id):
     course = Course.objects.get(pk=pk2)
-    teacher_enroll = TeacherEnrollment.objects.get(teacher_id=pk, course_id=course)
+    teacher_enroll = TeacherEnrollment.objects.get(pk=pk, course_id=course)
     exam = Exam.objects.get(name=exam_id)
     res_data = StudentResult.objects.filter(exam_id=exam, course_id=teacher_enroll.course_id,
                                             class_id=teacher_enroll.class_id)
@@ -173,7 +173,6 @@ def performance_analysis(request, pk):
     if request.method == 'POST':
         exam_id1 = request.POST.get('examId1')
         exam_id2 = request.POST.get('examId2')
-
         exam1 = get_object_or_404(Exam, pk=exam_id1)
         res_data1 = StudentResult.objects.filter(exam_id=exam1, course_id=teacher_enroll.course_id,
                                                  class_id=teacher_enroll.class_id)
@@ -297,7 +296,8 @@ def performance_analysis(request, pk):
                 'F_TO_W2': transition_count2['FAST_to_WEAK'],
                 'M_TO_W1': transition_count1['MODERATE_to_WEAK'],
                 'M_TO_W2': transition_count2['MODERATE_to_WEAK'],
-
+                'exam1': exam1.name,
+                'exam2': exam2.name,
                 'res_data1': res_data1,
                 'res_data2': res_data2,
                 'validate': validate,

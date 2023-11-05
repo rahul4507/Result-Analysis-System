@@ -98,8 +98,9 @@ def register_students(student_data_file):
     df = pd.read_csv(student_data_file)
     df = df.fillna(0)
     for idx, row in df.iterrows():
-        email = row['EMAIL_ID']
+        prn = row['PRN']
         password = 'Student@123'
+        email = f'{prn}@gmail.com'
         try:
             # Check if a user with the same email already exists
             user = CustomUser.objects.get(email=email)
