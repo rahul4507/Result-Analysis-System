@@ -290,7 +290,7 @@ def create_student(request):
         try:
             # Check if a user with the same email already exists
             user = CustomUser.objects.get(email=email)
-            if (user):
+            if user:
                 validate = 0
         except CustomUser.DoesNotExist:
             # Create a new user if no user with the same email exists
@@ -301,7 +301,7 @@ def create_student(request):
             )
         try:
             student = Student.objects.get(prn=prn)
-            if (student):
+            if student:
                 validate = 0
         except Student.DoesNotExist:
             # Create a new student if no student with the same prn exists

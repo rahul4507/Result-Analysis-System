@@ -56,6 +56,7 @@ th {
     </form>
     <hr>
     {% if res_data%}
+    <h4>Total No of Students: {{ res_data|length }}</h4>
     {%for name in res_data|slice:":1"%}
     <h4>Result of {{name.exam_id.name}} Total Marks : {{name.exam_id.total_marks}}</h4>
     {%endfor%}
@@ -69,7 +70,7 @@ th {
         </tr>
       </thead>
       <tbody>
-      {% for sr in res_data %}
+      {% for sr in res_data|slice:":10" %}
         <tr>
           <td>{{ sr.student_id.name }}</td>
           <td>{{ sr.student_id.prn }}</td>

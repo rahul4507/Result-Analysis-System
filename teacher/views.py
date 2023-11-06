@@ -1,4 +1,5 @@
 import plotly.graph_objs as go
+import plotly.io as pio
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.decorators import method_decorator
@@ -9,7 +10,7 @@ from student.models import StudentResult
 from teacher.models import Teacher, TeacherEnrollment
 from user.models import Exam, Course, Class, Semester
 from user.permission import teacher_required
-from teacher.process_data import generate_csv, generate_comparison_csv
+from teacher.process_data import generate_comparison_csv, generate_excel
 
 
 class TeacherLoginView(View):
@@ -118,8 +119,7 @@ def student_performance(request, pk):
             yaxis_title='Students',
             xaxis=dict(type='category', categoryorder='array', categoryarray=category_order)
         )
-        res_data = StudentResult.objects.filter(exam_id=exam, course_id=teacher_enroll.course_id,
-                                                class_id=teacher_enroll.class_id)[:5]
+
         return render(request, 'teacher/course_performance.html',
                       context={'teacher_enroll': teacher_enroll, 'exams': exams, 'res_data': res_data,
                                'Performance_Distribution': fig.to_html()})
@@ -134,12 +134,48 @@ def student_download_results(request, pk, pk2, exam_id):
     exam = Exam.objects.get(name=exam_id)
     res_data = StudentResult.objects.filter(exam_id=exam, course_id=teacher_enroll.course_id,
                                             class_id=teacher_enroll.class_id)
+    tag_counts = {
+        'WEAK': 0,
+        'FAST': 0,
+        'MODERATE': 0
+    }
 
-    csv_data = generate_csv(res_data)  # Implement this function to convert data to CSV format
+    for result in res_data:
+        if result.TAG == 'WEAK':
+            tag_counts['WEAK'] += 1
+        elif result.TAG == 'FAST':
+            tag_counts['FAST'] += 1
+        elif result.TAG == 'MODERATE':
+            tag_counts['MODERATE'] += 1
 
-    # Create a response with the CSV file
-    response = HttpResponse(csv_data, content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="result_data.csv"'
+    # BAR chart
+    labels = list(tag_counts.keys())
+    values = list(tag_counts.values())
+    colors = ['red', 'green', 'blue']
+
+    category_order = ['FAST', 'MODERATE', 'WEAK']
+    trace = go.Bar(
+        x=labels,
+        y=values,
+        marker=dict(color=colors)
+    )
+
+    # Adjust the bar width
+    trace.marker.line.width = 2  # Width of the bar border
+    trace.width = 0.3  # Width of the bars
+
+    fig = go.Figure(data=[trace])
+    fig.update_layout(
+        title='Tag Distribution',
+        xaxis_title='Performance',
+        yaxis_title='Students',
+        xaxis=dict(type='category', categoryorder='array', categoryarray=category_order)
+    )
+    excel_file = generate_excel(res_data, fig)
+    with open(excel_file, 'rb') as file:
+        response = HttpResponse(file.read(), content_type='application/ms-excel')
+        response['Content-Disposition'] = f'attachment; filename="{course.name}_{exam_id}.xlsx'
+
     return response
 
 
@@ -369,8 +405,7 @@ def overall_performance(request, pk):
             yaxis_title='Students',
             xaxis=dict(type='category', categoryorder='array', categoryarray=category_order)
         )
-        total_data = StudentResult.objects.filter(exam_id=t, course_id=teacher_enroll.course_id,
-                                                  class_id=teacher_enroll.class_id)[:5]
+
         return render(request, 'teacher/overall_performance.html',
                       context={'teacher_enroll': teacher_enroll, 'exams': t, 'overall_course_perf': total_data,
                                'overall_performance': fig.to_html()})

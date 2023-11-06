@@ -1,4 +1,5 @@
 import pandas as pd
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 from user.models import CustomUser, Class, Course, Exam
@@ -51,19 +52,21 @@ class StudentResult(models.Model):
         df = df.fillna(0)
         prn_numbers = df['PRN'].tolist()
         for prn in prn_numbers:
-            student = Student.objects.get(prn=prn)  # Assuming you have a PRN field in your Student model
-            course = Course.objects.get(id=course_id.id)  # Replace course_id with the actual course ID
-            class_ = Class.objects.get(id=class_id.id)  # Replace class_id with the actual class ID
-
-            student_enrollment, created = StudentEnrollment.objects.get_or_create(
-                student_id=student,
-                course_id=course,
-                class_id=class_
-            )
-            student_enrollment.roll_no = 0  # Replace with the actual value from the CSV file
-            student_enrollment.grade = 'A'  # Replace with the actual value from the CSV file
-            student_enrollment.performance = 'Excellent'  # Replace with the actual value from the CSV file
-            student_enrollment.save()
+            try:
+                student = Student.objects.get(prn=prn)  # Assuming you have a PRN field in your Student model
+                course = Course.objects.get(pk=course_id.id)  # Replace course_id with the actual course ID
+                class_ = Class.objects.get(pk=class_id.id)  # Replace class_id with the actual class ID
+                # Your code to work with the student object
+            except ObjectDoesNotExist:
+                student_enrollment, created = StudentEnrollment.objects.get_or_create(
+                    student_id=student,
+                    course_id=course,
+                    class_id=class_
+                )
+                student_enrollment.roll_no = 0  # Replace with the actual value from the CSV file
+                student_enrollment.grade = 'A'  # Replace with the actual value from the CSV file
+                student_enrollment.performance = 'Excellent'  # Replace with the actual value from the CSV file
+                student_enrollment.save()
 
         enrolled_students = StudentEnrollment.objects.filter(course_id=course_id, class_id=class_id)
         for idx, row in df.iterrows():
