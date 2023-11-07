@@ -29,9 +29,10 @@ def update_student_data(class_ins, student_grade_file):
             new_course.save()
     # Student Creation from the file
     for idx, row in df.iterrows():
-        email = row['EMAIL_ID']
         password = 'Student@123'
-
+        prn = row['PRN_NO']
+        name = row['FIRST_NAME']
+        email = f'{prn}@gmail.com'
         try:
             # Check if a user with the same email already exists
             user = CustomUser.objects.get(email=email)
@@ -42,9 +43,6 @@ def update_student_data(class_ins, student_grade_file):
                 email=email,
                 password=make_password(password)
             )
-
-        prn = row['PRN_NO']
-        name = row['FIRST_NAME']
 
         # Try to get the student with the same prn if it already exists
         try:

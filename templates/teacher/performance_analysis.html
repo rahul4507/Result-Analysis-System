@@ -63,20 +63,22 @@
         <div class="col-md-6">
           <form method="post" enctype="multipart/form-data"  novalidate>
             {% csrf_token %}
-              <p>Select First Exam Results</p>
+              <p>First Exam</p>
             <div class="form-group">
               <select class="form-control" name="examId1">
-                {% for e in exams %}
-                <option value="{{ e.id }}">{{ e.name }}</option>
-                {% endfor %}
+                    <option value="" disabled selected>Select a Exam</option>
+                    {% for e in exams %}
+                    <option value="{{ e.id }}">{{ e.name }}</option>
+                    {% endfor %}
               </select>
             </div>
-              <p>Select Second Exam Results</p>
+              <p>Second Exam</p>
               <div class="form-group">
               <select class="form-control" name="examId2">
-                {% for e in exams %}
-                <option value="{{ e.id }}">{{ e.name }}</option>
-                {% endfor %}
+                    <option value="" disabled selected>Select a Exam</option>
+                    {% for e in exams %}
+                    <option value="{{ e.id }}">{{ e.name }}</option>
+                    {% endfor %}
               </select>
             </div>
               <button id="submitBtn" class="btn btn-primary">Submit</button>

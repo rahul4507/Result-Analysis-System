@@ -62,12 +62,8 @@ def view_results(request):
             student for student, result in student_results if result == "Pass"
         ]
         passing_students_count = len(passing_students)
-        students_per_page = 20
-        paginator = Paginator(student_results, students_per_page)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
         context = {
-            'page_obj': page_obj,
+            'student_results': student_results,
             'classes': classes,
             'en_class': enrolled_class,
             'passing_students': passing_students_count

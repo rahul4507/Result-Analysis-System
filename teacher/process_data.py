@@ -2,7 +2,7 @@ import csv
 import pandas as pd
 from openpyxl import Workbook
 from openpyxl.drawing.image import Image
-from io import BytesIO, StringIO
+from io import StringIO
 
 
 def generate_excel(result_data, fig):

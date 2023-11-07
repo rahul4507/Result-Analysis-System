@@ -7,18 +7,13 @@
 {% include 'hod/sidebar.html' %}
 {% endif %}
 <div class="container my-4">
-    <div class="card">
-        <div class="card-header">
-            <h2 class="card-title">Result Analysis</h2>
-        </div>
-    </div>
-    <br>
-    <h4>Select Batch to View the Results</h4>
+    <h4>View Results</h4>
     <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         <div class="form-row">
             <div class="form-group col-md-4 mb-0">
-                <select class="form-control" name="classID">
+                <select class="form-control" name="classID" >
+                    <option value="" disabled selected>Select a Batch</option>
                     {% for c in classes %}
                     <option value="{{ c.id }}">{{ c }}</option>
                     {% endfor %}
@@ -30,8 +25,9 @@
         </div>
     </form>
     <hr>
-    {% if page_obj%}
+    {% if student_results%}
     <h4>{{en_class.semester}} Result</h4>
+    <h4>Total No of Students: {{student_results|length}}</h4>
     <h4>Semester Passed Students Count: {{passing_students}}</h4>
         <table class="table table-bordered">
           <thead>
@@ -42,7 +38,7 @@
             </tr>
           </thead>
           <tbody>
-          {% for student, result in page_obj %}
+          {% for student, result in student_results|slice:":10" %}
             <tr>
                 <td>{{ student.name }}</td>
                 <td>{{ student.prn }}</td>

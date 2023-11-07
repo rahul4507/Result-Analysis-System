@@ -36,12 +36,13 @@ th {
         </div>
     </div>
     <br>
-    <h4>Select Exam to View the Results</h4>
+    <h4>View Results</h4>
     <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         <div class="form-row">
             <div class="form-group col-md-3 mb-0">
                 <select class="form-control" name="examId">
+                    <option value="" disabled selected>Select a Exam</option>
                     {% for e in exams %}
                         {% if  e.name != "TOTAL" %}
                         <option value="{{ e.id }}">{{ e.name }}</option>
